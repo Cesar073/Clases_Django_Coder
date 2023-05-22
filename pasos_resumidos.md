@@ -159,11 +159,3 @@
     * Vamos a subir nuestra rama a Github:<br>
     `git push --set-upstream origin clase_17-Django_Portfolio_Parte_I`
 2. En Github realizamos un **Pull Request** (de ahora en más PR) y hacemos el merge a **main**.
----
----
-## PROBLEMAS
-1. Cuando no nos toma el entorno virtual, hay una solución que sirve para varios problemas:
-    * Cerrar y volver a abrir VsCode.
-    * Crear un archivo de Python temporalmente, sólo es para que VsCode seleccione un lenguaje y una versión.
-    * Una vez seleccionado el archivo, VsCode nos indicará en la barra inferior derecha, el lenguaje **Python** y la versión utilizada **3.11**. Debemos hacer clic en la versión y se nos depliega una lista de opciones, donde se encuentran todas las versiones de Python que tenemos instaladas y los entornos virtuales, ahí elegimos el que acabamos de crear, cuyo nombre comienza con el de la carpeta raíz y luego tiene un hash agregado al final.<br>
-    Una vez seleccionado el entorno ya podremos borrar el archivo de Python que habíamos creado y volvemos a abrir una consola. Deberíamos poder ver el entorno activado en la consola.
