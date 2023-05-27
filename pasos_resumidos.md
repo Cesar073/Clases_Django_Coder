@@ -1,221 +1,102 @@
+# CLASES DE DJANGO EN CODERHOUSE
+
+## CLASE 3: Clase 19 - Playground intermedio Parte I
+---
+### Entorno virtual
+De ahora en más, vamos a interpretar que el entorno virtual es activado en cada clase.
+
+---
 ### Git
 1. `git checkout main`
 2. `git pull`
-3. `git checkout -b clase_18-Portofio_Parte_II`
+3. `git checkout -b clase_19-Playground_intermedio_Parte_I`
+
 ---
-
-### Django: Templates
-
-#### Agregamos diccionarios
-1. 
+### Limpiamos vistas
+**views.py:**
 ```python
-def probando_template(request):
+from django.contrib import admin
+from django.urls import path
 
-    nombre = "Adrian"
-    apellido = "Holovaty"
-    diccionario = {"nombre": nombre, "apellido": apellido}
-
-    # Abrimos el archivo html
-    mi_html = open('./Clases_Coder/plantillas/index.html')
-
-    # Creamos el template haciendo uso de la clase Template
-    plantilla = Template(mi_html.read())
-
-    # Cerramos el archivo previamente abierto, ya que lo tenemos cargado en la variable plantilla
-    mi_html.close()
-
-    # Creamos un contexto, más adelante vamos a aprender a usarlo, ahora lo necesitamos aunque sea vacío para que funcione
-    mi_contexto = Context(diccionario)
-
-    # Terminamos de construír el template renderizándolo con su contexto
-    documento = plantilla.render(mi_contexto)
-
-    return HttpResponse(documento)
-```
-2.
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p style="color: red"> Hola {{nombre}}, estamos haciendo uso de variables por contexto</p>
-    <p style="color: green">Y podemos acceder al apellido "{{apellido}}" porque tenemos acceso a ambas variables.<br>
-    También aplicamos estilos pero luego lo haremos con CSS porque no es buena práctica hacerlo en el archivo html.</p>
-</body>
-</html>
-```
-#### Enviamos una lista y recorremos con bucle
-1. `diccionario = {"nombre": nombre, "apellido": apellido, "notas": [4, 8, 9, 10, 7, 8]}`
-2.
-```html
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <p style="color: red"> Hola {{nombre}}, estamos haciendo uso de variables por contexto</p>
-        <p style="color: green">Y podemos acceder al apellido "{{apellido}}" porque tenemos acceso a ambas variables.<br>
-        También aplicamos estilos pero luego lo haremos con CSS porque no es buena práctica hacerlo en el archivo html.</p>
-        <h2>Notas:</h2>
-        {% for n in notas %}
-            <p>Nota: {{n}}</p>
-        {% endfor %}
-    </body>
-</html>
-```
-#### Agregamos conidicional
-1. 
-```html
-        {% for n in notas %}
-            {% if n <= 4 %}
-                <p style="color: red">Reprobado: {{n}}</p>
-            {% else %}
-                <p style="color: green">Aprobado: {{n}}</p>
-            {% endif %}
-        {% endfor %}
-```
-#### Agregamos loader (cargadores)
-1. **views.py**: `from django.template import loader`
-2. 
-```python
-def usando_loader(request):
-    diccionario = {
-        "nombre": nombre,
-        "apellido": apellido,
-        "notas": [4, 8, 9, 10, 7, 8]
-    }
-    plantilla = loader.get_template('index.html')
-    documento = plantilla.render(diccionario)
-    return HttpResponse(documento)
-```
-3. **DIRS**:
-```python
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['./Clases_Coder/plantillas/'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+urlpatterns = [
+    path('admin/', admin.site.urls),
 ]
 ```
-4. Actualizamos el path.
-    ```python
-    from django.contrib import admin
-    from django.urls import path
-    from .views import (
-        saludo,
-        muestra_nombre,
-        probando_template,
-        usando_loader
-    )
 
-    urlpatterns = [
-        path('admin/', admin.site.urls),
-        path('saludo/', saludo),
-        path('muestra_nombre/<nombre>/', muestra_nombre),
-        path('probando_template/', probando_template),
-        path('usando_loader/', usando_loader),
-    ]
-    ```
 ---
-
-### Django: Modelos y Aplicaciones
-1. Creamos una app:<br>
-    `python manage.py startapp AppCoder`
-2. Actualizamos **settings.py**:
-    ```python
-    INSTALLED_APPS = [
-        'django.contrib.admin',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.messages',
-        'django.contrib.staticfiles',
-        'AppCoder',
-    ]
-    ```
-3. Creamos los **models.py**:
+### Django: Urls avanzadas
+**Para crear nuestras vistas en una app:**
+1. Crear en la app **AppCoder** un archivo de **urls.py**:
 ```python
-from django.db import models
+from django.urls import path
+from AppCoder import views
 
-class Curso(models.Model):
-    nombre = models.CharField(max_length=40)
-    camada = models.IntegerField()
-
-class Estudiante(models.Model):
-    nombre = models.CharField(max_length=40)
-    apellido = models.CharField(max_length=20)
-    email = models.EmailField(max_length=40)
-
-class Profesor(models.Model):
-    nombre = models.CharField(max_length=40)
-    apellido = models.CharField(max_length=20)
-    email = models.EmailField(max_length=40)
-    apellido = models.CharField(max_length=30)
-
-class Entregable(models.Model):
-    nombre = models.CharField(max_length=30)
-    fecha_de_entrega = models.DateField()
-    entregado = models.BooleanField()
+urlpatterns = [
+    path('/', views.inicio),
+    path('cursos/', views.cursos),
+    path('profesores/', views.profesores),
+    path('estudiantes/', views.estudiantes),
+    path('entregables/', views.entregables)
+]
 ```
-4. Corremos migraciones:<br>
-    `python manage.py makemigrations`<br>
-    `python manage.py migrate`
----
-### Django: Agregando información a la base de datos
-1. 
+2. Editamos el archivo **urls.py** que teníamos dentro de la carpeta principal:
 ```python
-from AppCoder.models import Curso
+from django.contrib import admin
+from django.urls import path, include
 
-def curso(request, nombre, numero):
-    curso = Curso(nombre=nombre, camada=int(numero))
-    curso.save()
-    documento = f"Curso: {curso.nombre}<br>Camada: {curso.camada}"
-    return HttpResponse(documento)
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('AppCoder/', include('AppCoder.urls'))
+]
 ```
-2. Agregamos el path nuevo importando previamente la función:
-    ```python
-    from django.contrib import admin
-    from django.urls import path
-    from .views import (
-        saludo,
-        muestra_nombre,
-        probando_template,
-        usando_loader,
-        curso
-    )
 
-    urlpatterns = [
-        path('admin/', admin.site.urls),
-        path('saludo/', saludo),
-        path('muestra_nombre/<nombre>/', muestra_nombre),
-        path('probando_template/', probando_template),
-        path('usando_loader/', usando_loader),
-        path('curso/<nombre>/<numero>/', curso),
-    ]
-    ```
+3. Creamos en el archivo de **views.py** (en la app se crea automáticamente) las vistas a realizar, por el momento serán sencillas:
+```python
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def inicio(request):
+    return HttpResponse("Vista inicio")
+
+def cursos(request):
+    return HttpResponse("Vista cursos")
+
+def profesores(request):
+    return HttpResponse("Vista profesores")
+
+def estudiantes(request):
+    return HttpResponse("Vista estudiantes")
+
+def entregables(request):
+    return HttpResponse("Vista entregables")
+```
+>NOTA: Ya podemos probar su funcionamiento levantando el servidor.
+
 ---
+#### Agregamos los templates en una APP
+1. Ingresar a la web: [Bootstrap - Templates](https://startbootstrap.com/templates), elegimos una plantilla general, la descargamos y descomprimimos.
+2. Creamos: `static/AppCoder` y `templates/AppCoder`.
+3. Colocamos los archivos donde correspondan.
 
+Ahora hacemos referencia en **views.py**:
+1. Indicamos en **AppCoder/views.py** apunte a nuestro nuevo index, o sea, el **index.html**:
+    ```python
+    from django.shortcuts import render
+    from django.http import HttpResponse
+
+    def inicio(request):
+        return render(request, "AppCoder/index.html")
+    ```
+2. `{% load static %}`
+    ```html
+    <link href="{% static 'AppCoder/css/styles.css' %}" rel="stylesheet" />
+    ```
+3. Ya estamos en condiciones de editar el archivo html a mano para que concuerde con nuestro proyecto.
+
+---
 ### Subimos los cambios a GitHub
 1. Subimos los cambios a nuestro repositorio de GitHub:
     * `git add .`
-    * `git commit -m "Paso 1 del proyecto: 1er clase"`
-    * `git push --set-upstream origin clase_18-Portfolio_Parte_II`
+    * `git commit -m "Paso 3 del proyecto: 3er clase"`
+    * `git push --set-upstream origin clase_19-Playground_intermedio_Parte_I`
 2. En Github realizamos un PR y hacemos el merge a **main**.
