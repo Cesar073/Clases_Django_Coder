@@ -1,117 +1,145 @@
 # CLASES DE DJANGO EN CODERHOUSE
 
-## CLASE 3: Clase 19 - Playground intermedio Parte I
+## CLASE 4: Clase 20 - Playground intermedio Parte II
 ---
 ### Entorno virtual
-De ahora en más, vamos a interpretar que el entorno virtual es activado en cada clase.
+Interpretamos que el entorno virtual es activado en cada clase.
 
 ---
 ### Git
 1. Nos vamos a mover a la rama main, actualizarla y crear una nueva rama para la nueva clase:
     `git checkout main`
 2. Actualizamos con: `git pull`. Esto se descarga los cambios que hayan en la rama main. Recordemos que el PR realizado en la clase anterior agregó archivos y modificaciones en la rama main.
-3. Creamos y nos movemos a la nueva rama: `git checkout -b clase_19-Playground_intermedio_Parte_I`
+3. Creamos y nos movemos a la nueva rama: `git checkout -b clase_20-Playground_intermedio_Parte_II`
 
 ---
-### Limpiamos vistas
-Cuando creamos el proyecto anterior, hemos creado las vistas (**views.py**) y agregamos las urls asociadas a esas vistas. Lo que no estaba correcto es crear y modificar estos archivos en la carpeta principal de configuración del proyecto, por lo tanto, eliminamos de la carpeta Clases_Coder/Clases_Coder/views.py y luego restauramos el archivos de **urls.py**.
-```python
-from django.contrib import admin
-from django.urls import path
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-]
-```
-A partir de ahora vamos a crear las vistas dentro de las aplicaciones.<br>
-Para el cambio aplicado podemos hacer un commit y luego continuar.
-
----
-### Django: Urls avanzadas
-Resumen:<br>
-Por más que nuestro proyecto sea simple, rápidamente puede contenter múltiples páginas, tengamos en cuenta que una única tabla de nuestra base de datos muchas veces requiere hasta 4 páginas para poder realizar un CRUD en la misma. Si a eso sumamos index, about y más tablas, rápidamente contaremos con múltiples vistas por más que contemos con un proyecto relativamente pequeño.<br>
-Para solucionar ésto podemos crear aplicaciones (de Django) donde no sólo contenemos nuestra base de datos, sino también podemos generar las vistas asociadas a dicha app. Asimismo, estructurar con aplicaciones nuestro proyecto nos facilita enormemente escalarlo o realizar cambios sobre el mismo en la medida en que lo necesitemos.<br>
-**Para crear nuestras vistas en una app:**
->NOTA: Continuamos el proceso trabajando sobre el proyecto actual, donde contamos con nuestra AppCoder.
-1. Crear en la app **AppCoder** un archivo de **urls.py** con los path a los cuáles queremos agregar al proyecto:
-```python
-from django.urls import path
-from AppCoder import views
-
-urlpatterns = [
-    path('/', views.inicio),
-    path('cursos/', views.cursos),
-    path('profesores/', views.profesores),
-    path('estudiantes/', views.estudiantes),
-    path('entregables/', views.entregables)
-]
-```
-2. En el archivo **urls.py** que teníamos dentro de la carpeta principal de configuración del proyecto, vamos a dejar el acceso al admin y en vez de cargar un path para cada una de nuestras vistas, vamos a incluír todo el archivo **urls.py** que acabamos de crear en la app, de la siguiente manera:
-```python
-from django.contrib import admin
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('AppCoder/', include('AppCoder.urls'))
-]
-```
-
-3. Creamos en el archivo de **views.py** (en la app se crea automáticamente) las vistas a realizar, por el momento serán sencillas:
-```python
-from django.http import HttpResponse
-
-def inicio(request):
-    return HttpResponse("Vista inicio")
-
-def cursos(request):
-    return HttpResponse("Vista cursos")
-
-def profesores(request):
-    return HttpResponse("Vista profesores")
-
-def estudiantes(request):
-    return HttpResponse("Vista estudiantes")
-
-def entregables(request):
-    return HttpResponse("Vista entregables")
-```
->NOTA: Ya podemos probar su funcionamiento levantando el servidor.
-
----
-### Agregamos los templates en una APP
-
-Resumen:<br>
-A partir de ahora vamos a perfeccionar nuestro front haciendo uso de plantillas creadas en Bootstrap o pueden ser extraídas de otra web.<br>
-A continuación, un "paso a paso" para ver cómo incorporar una plantilla creada en bootstrap:<br>
-1. Ingresar a la web: [Bootstrap - Templates](https://startbootstrap.com/templates)<br>
-    Podemos buscar entre múltiples tipos de páginas, pero nosotros vamos a filtrar en las de propósito general y gratuitas.
-2. Una vez en la web, seleccionamos la que más se ajuste a nuestro proyecto y hacemos clic.
-3. Hacemos clic en **Free Donwnload**.
-4. Una vez descargado el archivo `.zip`, podemos descomprimirlo y llevar sus carpetas a nuestro proyecto.
-5. Para nuestro caso donde tenemos una app llamada **AppCoder**, vamos a ingresar a dicha carpeta y crear 2 nuevas carpetas: `static/AppCoder` y `templates/AppCoder`.
-    Es decir, dentro de la carpeta de la app tenemos que crear **static** y **templates**, pero dentro de cada una de ellas vamos a crear una nueva carpeta con el mismo nombre de la app a la que pertenecen.
-6. Dentro de `templates/AppCoder` vamos a colocar nuestros archivos `.html`.
-7. Dentro de la carpeta `static/AppCoder` vamos a colocar las demás carpetas descargadas de Bootstrap, que suelen ser: `assets - css - js`.
-    
-Ahora lo que nos falta es indicarle a nuestras funciones en **views.py** que rendericen el html recién cargado junto a los archivos estáticos (assets, css y js):
-1. Indicamos en **AppCoder/views.py** apunte a nuestro nuevo index, o sea, el **index.html**.
-2. Vamos a editar el index para que Django luego sepa cargar los archivos estáticos del mismo:
-    - Debemos colocar en el inicio del archivo (puede ser la primer línea dentro del <head>), la siguiente sintaxis: `{% load static %}`
-    - Luego, modificamos los links o referencias a todos los archivos externos al html (css, js, img, etc), cambiando:
+### Herencia de Templates
+Al crear muchos archivos html podemos darnos cuenta que hay código que se repiten en todos los archivos como la navbar o el footer. Podemos aplicar **Herencia de templates** para evitar escribirlo más de una vez y centralizar el código, facilitando posibles futuros cambios:
+1. Crear un archivo html que nos sirva de base, del que todos van a heredar, donde ahí colocaremos la navbar, footer y todo lo que se repita en nuestro proyecto.
+2. Luego, vamos a ubicar las partes donde consideramos que cambiarían en cada página y la encerramos entre el juego de llaves y porcentajes: {% %}.<br>
+    Por ejemplo, si queremos que el título de la pestaña cambie en función a la página que se visita, podemos escribir lo siguiente:<br>
+    `{% block title %} Index {% endblock title %}`<br>
+    De ésta forma, cada página que hereda del html base podrá ingresar su propio título o bien, si no colocamos nada en la página que hereda quedará por defecto "Index".<br>
+    Nuestro html de base quedaría así:
     ```html
-    ESTO
-    <link href="css/styles.css" rel="stylesheet" />
-    
-    POR ESTO
-    <link href="{% static 'AppCoder/css/styles.css' %}" rel="stylesheet" />
+    <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            {% load static %}
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+            <meta name="description" content="" />
+            <meta name="author" content="" />
+            <title>{% block title %} Index {% endblock title %}</title>
+            <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+            <!-- Font Awesome icons (free version)-->
+            <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+            <!-- Core theme CSS (includes Bootstrap)-->
+            <link href="{% static 'AppCoder/css/styles.css' %}" rel="stylesheet" />
+        </head>
+        <body id="page-top">
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="#page-top">Start Bootstrap</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link" href="#!">Iniciar sesión</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#!">Crear cuenta</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            {% block main %}
+            {% endblock main %}
+            <!-- Footer-->
+            <footer class="py-5 bg-black">
+                <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; Your Website 2023</p></div>
+            </footer>
+        </body>
+    </html>
+
     ```
-3. Ya estamos en condiciones de editar el archivo html a mano para que concuerde con nuestro proyecto.
+4. Por último, creamos todos los html que heredan de ese archivo base:
+    - Indicar que vamos a heredear del otro archivo: `{% extends 'AppCoder/base.html' %}`
+    - También cargamos los estáticos: `{% load static %}`
+    - Y creamos el bloque que queremos incrustar: `{% block title %} Template hecho con Herencia {% endblock title %}`
+    
+    ```html
+    {% extends 'AppCoder/base.html' %}
+    
+    {% load static %}
+
+    {% block title %} Template hecho con Herencia {% endblock title %}
+
+    {% block main %}
+    <h1>Este es el título del Inicio que cambio</h1>
+    <p>Se ha heredado todo desde la plantilla padre</p>
+    <h3>En el hijo, inicio.html, casí no hay nada :)</h3>
+    {% endblock main %}
+    ```
+
+---
+### Navegando entre templates
+Para navegar en nuestro sitio, debemos utilizar una sintaxis diferente dentro de nuestros html.
+1. Vamos a indicar en nuestro **urls.py** un nombre para cada url:
+    ```python
+    urlpatterns = [
+        path('/', views.inicio, name="Inicio"),
+        path('profesores/', views.profesores, name="Profesores"),
+        path('estudiantes/', views.estudiantes, name="Estudiantes"),
+        path('cursos/', views.cursos, name="Cursos"),
+        path('entregables/', views.entregables, name="Entregables")
+    ]
+    ```
+2. En los llamados a nuestros links en el html, debemos indicarlos con nueva sintaxis pero haciendo referencia a los nombres recién creados:
+    ```html
+    <nav class="navbar navbar-light bg-light static-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
+            <a class="navbar-brand" href="{% url 'Profesores' %}">Profesores</a>
+            <a class="navbar-brand" href="{% url 'Estudiantes' %}">Estudiantes</a>
+            <a class="navbar-brand" href="{% url 'Cursos' %}">Cursos</a>
+            <a class="navbar-brand" href="{% url 'Entregables' %}">Entregables</a>
+            <a class="btn btn-primary" href="#NADAAUN">INICIAR</a>
+        </div>
+    </nav>
+    ```
+3. En caso de que aún estemos usando el método render en las vistas, le cambiamos a todas el `HttpResponse` por:
+    ```python
+    from django.shortcuts import render
+
+    def inicio(request):
+        return render(request, "AppCoder/index.html")
+    ```
+---
+### Panel Admin de Django
+El panel de administración de Django es una herramienta versátil y muy útil a la hora de administrar una aplicación. Desde una interfaz gráfica podemos realizar acciones del tipo CRUD en cada una de nuestras tablas y administrar usuarios.<br>
+Para poder utilizar nuestro Panel de Django con nuestros modelos debemos seguir los siguientes pasos:
+1. Ir a cada archivo **admin.py** de cada aplicación y agregamos cada modelo de la siguiente manera:
+    ```python
+    from django.contrib import admin
+    from .models import Profesor, Estudiante, Curso, Entregable
+
+    admin.site.register(Profesor)
+    admin.site.register(Estudiante)
+    admin.site.register(Curso)
+    admin.site.register(Entregable)
+
+    ```
+2. Como no existe aún un usuario en nuestro proyecto, vamos a crear un superuser desde la consola de Django:
+    - `python manage.py createsuperuser`
+    - Cargamos un user (cesar)
+    - Cargamos un mail (a@b.com)
+    - Cargamos el password y lo repetimos (pass123)
+
+3. Ya podemos ingresar a nuestro panel de Admin (url: `localhost:8000/admin/`) y luego de ingresar las credenciales recién creadas, podremos trabajar con nuestros modelos.
 
 ---
 ### Subimos los cambios a GitHub
 1. Subimos los cambios a nuestro repositorio de GitHub:
     * `git add .`
-    * `git commit -m "Paso 3 del proyecto: 3er clase"`
-    * `git push --set-upstream origin clase_19-Playground_intermedio_Parte_I`
+    * `git commit -m "Agregamos Herencia e iniciamos el Admin de Django"`
+    * `git push --set-upstream origin clase_20-Playground_intermedio_Parte_II`
 2. En Github realizamos un PR y hacemos el merge a **main**.
