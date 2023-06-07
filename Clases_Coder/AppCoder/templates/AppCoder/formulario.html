@@ -1,0 +1,16 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+
+<form action="/AppCoder/estudiantes/" method="POST">
+    {% csrf_token %}
+    <p> Nombre: <input type = "text" name="curso">
+    <p> Camada: <input type = "text" name="camada">
+    <input type = "submit" value="Enviar">
+</form>
+
+{% endblock main %}
