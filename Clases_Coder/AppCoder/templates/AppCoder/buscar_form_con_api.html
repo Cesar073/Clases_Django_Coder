@@ -1,0 +1,18 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+    <!-- action: representa la url a la que nos va a re-dirigir. Tiene prioridad
+    por sobre la redirección que podamos colocar en views.py -->
+    <form action="" method="POST">
+        {% csrf_token %}
+        <table>
+            {{ miFormulario.as_table }}
+        </table>
+        <input type="submit" value="Enviar">
+
+    </form>
+{% endblock main %}

@@ -1,0 +1,16 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+    <!-- action: representa la url a la que nos va a re-dirigir. Tiene prioridad
+    por sobre la redirección que podamos colocar en views.py -->
+    <ul>
+        {% for curso in cursos %}
+        <li> {{ curso.nombre }} </li>
+        <li> {{ curso.camada }} </li>
+        {% endfor %}
+    </ul>
+{% endblock main %}
