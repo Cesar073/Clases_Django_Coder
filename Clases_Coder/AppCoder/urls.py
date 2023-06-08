@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.urls import path
 from AppCoder import views
+from AppCoder import views_clases
 
 urlpatterns = [
     path('', views.inicio, name="Inicio"),
@@ -27,3 +28,13 @@ urlpatterns = [
     path('form-con-api/', views.form_con_api, name="Form-Con-Api"),
     path('buscar-form-con-api/', views.buscar_form_con_api, name="Buscar-Form-Con-Api")
 ]
+
+urls_vistas_clases = [
+    path('clases/lista/', views_clases.CursoListView.as_view(), name='List'),
+    path('clases/detalle/<int:pk>/', views_clases.CursoDetalle.as_view(), name='Detail'),
+    path('clases/nuevo/', views_clases.CursoCreateView.as_view(), name='New'),
+    path('clases/editar/<int:pk>', views_clases.CursoUpdateView.as_view(), name='Edit'),
+    path('clases/eliminar/<int:pk>', views_clases.CursoDeleteView.as_view(), name='Delete')
+]
+
+urlpatterns += urls_vistas_clases

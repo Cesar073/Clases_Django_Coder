@@ -1,0 +1,16 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+
+<p>Curso: <i>{{ curso.nombre }}</i></p>
+<p>Camada: <i>{{ curso.camada }}</i></p>
+
+<p>
+    <a href="{% url 'List' %}">Regresar</a>
+</p>
+
+{% endblock main %}
