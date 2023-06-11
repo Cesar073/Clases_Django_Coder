@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from .models import Curso
 from AppCoder.forms import CursoFormulario, BuscaCursoForm
+from django.contrib.auth.decorators import login_required
 
 def inicio(request):
     return render(request, "AppCoder/index.html")
 
+@login_required
 def cursos(request):
     return render(request, "AppCoder/cursos.html")
 

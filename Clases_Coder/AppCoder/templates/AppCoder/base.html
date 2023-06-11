@@ -45,8 +45,8 @@
                           </div>
                         
                         
-                        <li class="nav-item"><a class="nav-link" href="#!">Iniciar sesión</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Crear cuenta</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'Login' %}">Iniciar sesión</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'Register' %}">Crear cuenta</a></li>
                     </ul>
                 </div>
             </div>
@@ -66,6 +66,7 @@
             <div class="bg-circle-4 bg-circle"></div>
         </header>
 
+        <p>{{ mensaje }}</p>
         <div  class="container">
             {% block main %}
             {% endblock main %}
