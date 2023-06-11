@@ -39,3 +39,4 @@ urlpatterns += [
     path('class-update/<pk>/', class_views.CursoUpdateView.as_view(), name="Update"),
     path('class-delete/<pk>/', class_views.CursoDeleteView.as_view(), name="Delete"),
 ]
+# objects.get(pk=pk)

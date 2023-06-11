@@ -20,7 +20,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'AppCoder/css/styles.css' %}" rel="stylesheet" />
     </head>
-    <body id="page-top" class="container">
+    <body id="page-top">
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
             <div class="container px-5">
@@ -66,9 +66,11 @@
             <div class="bg-circle-4 bg-circle"></div>
         </header>
 
-        {% block main %}
-        {% endblock main %}
-        
+        <div  class="container">
+            {% block main %}
+            {% endblock main %}
+        </div>
+            
         <!-- Footer-->
         <footer class="py-5 bg-black">
             <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; Your Website 2023</p></div>

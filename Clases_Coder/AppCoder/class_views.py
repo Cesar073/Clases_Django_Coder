@@ -2,7 +2,6 @@ from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Curso
-from .forms import CursoFormulario
 from django.urls import reverse_lazy
 
 class CursoListView(ListView):
@@ -29,13 +28,13 @@ class CursoCreateView(CreateView):
     # Indicando la URL
     # success_url = "../class-list/"
     # Con el reverse_lazy indicamos el nombre de la vista
-    success_url = reverse_lazy("List")
+    success_url = reverse_lazy("Profesores")
 
 
 class CursoUpdateView(UpdateView):
     model = Curso
     success_url = reverse_lazy("List")
-    fields = ["nombre", "camada"]
+    fields = ["id", "nombre", "camada"]
     template_name = "AppCoder/class_update.html"
 
 
