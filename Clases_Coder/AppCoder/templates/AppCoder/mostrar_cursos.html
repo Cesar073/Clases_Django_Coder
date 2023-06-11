@@ -1,0 +1,17 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+
+
+{% for curso in cursos %}
+    <li>{{ curso }}</li><a href="{% url 'Delete' curso.id %}">Borrar</a>
+{% endfor %}
+
+
+{% endblock main %}
+
+

@@ -35,6 +35,7 @@ def form_con_api(request):
         if miFormulario.is_valid():
             informacion = miFormulario.cleaned_data
             curso = Curso(nombre=informacion["curso"], camada=informacion["camada"])
+
             curso.save()
             return render(request, "AppCoder/index.html")
     else:
@@ -56,3 +57,24 @@ def buscar_form_con_api(request):
         miFormulario = BuscaCursoForm()
 
     return render(request, "AppCoder/buscar_form_con_api.html", {"miFormulario": miFormulario})
+
+def mostrar_cursos(request):
+
+    cursos = Curso.objects.all() #trae todos los profesores
+
+    contexto= {"cursos":cursos} 
+
+    return render(request, "AppCoder/mostrar_cursos.html",contexto)
+
+def clase_22_cursos(request, id):
+
+    profesor = Curso.objects.get(id=id)
+    profesor.delete()
+ 
+    # vuelvo al menú
+    cursos = Curso.objects.all()  # trae todos los profesores
+ 
+    contexto = {"cursos": cursos}
+ 
+    return render(request, "AppCoder/mostrar_cursos.html", contexto)
+
