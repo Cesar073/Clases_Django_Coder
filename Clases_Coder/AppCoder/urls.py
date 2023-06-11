@@ -36,6 +36,6 @@ urlpatterns += [
     path('class-list/', class_views.CursoListView.as_view(), name="List"),
     path('class-detail/<pk>/', class_views.CursoDetailView.as_view(), name="Detail"),
     path('class-create/', class_views.CursoCreateView.as_view(), name="Create"),
-    path('class-update/<int:id>/', class_views.CursoUpdateView.as_view(), name="Update"),
-    path('class-delete/<int:id>/', class_views.CursoDeleteView.as_view(), name="Delete"),
+    path('class-update/<pk>/', class_views.CursoUpdateView.as_view(), name="Update"),
+    path('class-delete/<pk>/', class_views.CursoDeleteView.as_view(), name="Delete"),
 ]

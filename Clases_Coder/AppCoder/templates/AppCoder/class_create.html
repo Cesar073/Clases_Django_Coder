@@ -10,8 +10,10 @@
 
 <form method="POST">
     {% csrf_token %}
-    Estas seguro/a {{ object }}
-    <input type="submit" value="Borrar">
+
+    {{ form.as_p }}
+    <input type="submit" value="Enviar">
+
 </form>
 
 
