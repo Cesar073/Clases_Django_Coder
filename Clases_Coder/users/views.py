@@ -1,8 +1,11 @@
 from django.shortcuts import render
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate
+from users.forms import UserEditForm
 from .forms import UserRegisterForm
+
 
 # Create your views here.
 def login_request(request):
@@ -47,3 +50,32 @@ def register(request):
         form = UserRegisterForm()     
 
     return render(request,"users/registro.html" ,  {"form":form})
+
+# Vista de editar el perfil
+@login_required
+def editarPerfil(request):
+
+    usuario = request.user
+
+    if request.method == 'POST':
+
+        miFormulario = UserEditForm(request.POST, request.FILES)
+
+        if miFormulario.is_valid():
+
+            informacion = miFormulario.cleaned_data
+
+            usuario.email = informacion['email']
+            usuario.password1 = informacion['password1']
+            usuario.password2 = informacion['password2']
+            usuario.last_name = informacion['last_name']
+            usuario.first_name = informacion['first_name']
+
+            usuario.save()
+
+            return render(request, "AppCoder/index.html")
+
+    else:
+        miFormulario = UserEditForm(initial={'email': usuario.email})
+
+    return render(request, "users/editarPerfil.html", {"miFormulario": miFormulario, "usuario": usuario})

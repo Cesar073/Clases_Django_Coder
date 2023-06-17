@@ -44,8 +44,12 @@
                             </ul>
                           </div>
                         
-                        
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Login' %}">Iniciar sesión</a></li>
+                        {% if request.user.is_authenticated %}
+                            <img height="40px" src="{{ url }}" alt="">
+                            <li class="nav-item"><a class="nav-link" href="">Hola {{ request.user.username }}</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'Login' %}">Iniciar sesión</a></li>
+                        {% endif %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'Register' %}">Crear cuenta</a></li>
                     </ul>
                 </div>

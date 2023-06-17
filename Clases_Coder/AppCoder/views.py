@@ -2,9 +2,19 @@ from django.shortcuts import render
 from .models import Curso
 from AppCoder.forms import CursoFormulario, BuscaCursoForm
 from django.contrib.auth.decorators import login_required
+from users.models import Avatar
 
 def inicio(request):
-    return render(request, "AppCoder/index.html")
+    
+    print(request.user.id)
+
+    try:
+        url = Avatar.objects.filter(user=request.user.id)[0].imagen.url
+    except IndexError:
+        url = None
+    print(url)
+
+    return render(request, "AppCoder/index.html", {"url": url})
 
 @login_required
 def cursos(request):
