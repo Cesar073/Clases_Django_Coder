@@ -6,13 +6,10 @@ from users.models import Avatar
 
 def inicio(request):
     
-    print(request.user.id)
-
     try:
         url = Avatar.objects.filter(user=request.user.id)[0].imagen.url
     except IndexError:
         url = None
-    print(url)
 
     return render(request, "AppCoder/index.html", {"url": url})
 

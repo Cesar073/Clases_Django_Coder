@@ -10,9 +10,8 @@ class CursoListView(ListView):
     model = Curso
     template_name = "AppCoder/class_list.html"
 
-    def get(self, *args, **kwargs):
-        print("\n\nEJECUTANDO GET\n\n")
-        return super().get(*args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class CursoDetailView(LoginRequiredMixin, DetailView):

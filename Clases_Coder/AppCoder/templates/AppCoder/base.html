@@ -39,18 +39,21 @@
                               VBC
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                              <li><a class="dropdown-item" href="{% url 'List' %}">List</a></li>
-                              <li><a class="dropdown-item" href="{% url 'Create' %}">Create</a></li>
+                                <li><a class="dropdown-item" href="{% url 'List' %}">List</a></li>
+                                <li><a class="dropdown-item" href="{% url 'Create' %}">Create</a></li>
                             </ul>
-                          </div>
+                        </div>
                         
                         {% if request.user.is_authenticated %}
-                            <img height="40px" src="{{ url }}" alt="">
-                            <li class="nav-item"><a class="nav-link" href="">Hola {{ request.user.username }}</a></li>
+                            <img height="40px" src="{{  user.avatar.imagen.url  }}" alt="">
+                            <label style="color: white" for="">{{ user.avatar.date }}</label> 
+                            <li class="nav-item"><a class="nav-link" href="{% url 'EditarPerfil' %}">Hola {{ request.user.username }}</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'Logout' %}">Cerrar Sesión</a></li>
                         {% else %}
+                            <img height="40px" src="{{ imagen.url }}" alt="">
                             <li class="nav-item"><a class="nav-link" href="{% url 'Login' %}">Iniciar sesión</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'Register' %}">Crear cuenta</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Register' %}">Crear cuenta</a></li>
                     </ul>
                 </div>
             </div>
@@ -85,3 +88,4 @@
 
     </body>
 </html>
+

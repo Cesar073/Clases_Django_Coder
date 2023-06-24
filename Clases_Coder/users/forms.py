@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Avatar
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -26,4 +27,26 @@ class UserEditForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password1', 'password2', 'last_name', 'first_name']
+        fields = ['email', 'last_name', 'first_name', 'password1', 'password2']
+
+
+class AvatarForm(forms.Form):
+    avatar = forms.FileField()
+
+
+class MyUserEditForm(forms.Form):
+    # Obligatorios
+    email = forms.EmailField(label="Ingrese su email:")
+    last_name = forms.CharField()
+    first_name = forms.CharField()
+    avatar = forms.FileField()
+
+    class Meta:
+        model = User
+        fields = ['email', 'last_name', 'first_name', 'avatar']
+
+
+class CambiarPasswordForm(forms.Form):
+    password1 = forms.CharField(label="Repetir contraseña", widget=forms.PasswordInput())
+    password2 = forms.CharField(label="Repetir contraseña", widget=forms.PasswordInput())
+    

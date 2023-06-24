@@ -5,3 +5,4 @@ __pycache__/
 # Archivos de pipenv. Sólo dejamos requirements.txt
 Pipfile
 Pipfile.lock
+media/**

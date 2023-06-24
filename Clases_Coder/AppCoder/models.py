@@ -8,7 +8,7 @@ class Curso(models.Model):
         return self.nombre
 
 class Estudiante(models.Model):
-    nombre = models.CharField(max_length=40)
+    nombre = models.TextField(max_length=40)
     apellido = models.CharField(max_length=20)
     email = models.EmailField(max_length=40)
 
