@@ -24,29 +24,23 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
             <div class="container px-5">
-                <a class="navbar-brand" href="#page-top">Start Bootstrap</a>
+                <a class="navbar-brand" href="#page-top">Coder</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'Inicio' %}">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Profesores' %}">Profesores</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Estudiantes' %}">Estudiantes</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Cursos' %}">Cursos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Entregables' %}">Entregables</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'Create-Comun-Form' %}">create_comun</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'Create-Api-Form' %}">create_api_form</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'Read-Api-Form' %}">read_api_form</a></li>
                         
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                              VBC
+                                Vistas Basadas en Clases
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                              <li><a class="dropdown-item" href="{% url 'List' %}">List</a></li>
-                              <li><a class="dropdown-item" href="{% url 'Create' %}">Create</a></li>
+                                <li><a class="dropdown-item" href="{% url 'Inicio' %}">Inicio</a></li>
                             </ul>
-                          </div>
-                        
-                        
-                        <li class="nav-item"><a class="nav-link" href="#!">Iniciar sesión</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Crear cuenta</a></li>
+                        </div>
                     </ul>
                 </div>
             </div>
