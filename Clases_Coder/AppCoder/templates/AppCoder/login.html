@@ -1,0 +1,17 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+
+    <h2>{{ mensaje }}</h2>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Inciar sesion</button>
+    </form>
+
+{% endblock main %}
