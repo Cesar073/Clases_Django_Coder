@@ -1,6 +1,6 @@
 # CLASES DE DJANGO EN CODERHOUSE
 
-## CLASE 4: Clase 20 - Playground intermedio Parte II
+## CLASE 6: Clase 22 - Playground Avanzado Parte I
 ---
 ### Entorno virtual
 Interpretamos que el entorno virtual es activado en cada clase.
@@ -10,78 +10,143 @@ Interpretamos que el entorno virtual es activado en cada clase.
 1. Nos vamos a mover a la rama main, actualizarla y crear una nueva rama para la nueva clase:
     `git checkout main`
 2. Actualizamos con: `git pull`. Esto se descarga los cambios que hayan en la rama main. Recordemos que el PR realizado en la clase anterior agregó archivos y modificaciones en la rama main.
-3. Creamos y nos movemos a la nueva rama: `git checkout -b clase_20-Playground_intermedio_Parte_II`
+3. Creamos y nos movemos a la nueva rama: `git checkout -b clase_22-Playground_Avanzado_Parte_I`
 
 ---
-### Herencia de Templates
-Al crear muchos archivos html podemos darnos cuenta que hay código que se repiten en todos los archivos como la navbar o el footer. Podemos aplicar **Herencia de templates** para evitar escribirlo más de una vez y centralizar el código, facilitando posibles futuros cambios:
-1. Crear un archivo html que nos sirva de base, del que todos van a heredar, donde ahí colocaremos la navbar, footer y todo lo que se repita en nuestro proyecto.
-2. Luego, vamos a ubicar las partes donde consideramos que cambiarían en cada página y la encerramos entre el juego de llaves y porcentajes: {% %}.<br>
+## CRUD con funciones
+CRUD es el acrónimo de *Create*, *Read*, *Update* y *Delete*, que significan Crear, Leer, Actualizar y Eliminar haciendo referencia a acciones aplicadas sobre la base de datos.<br>
+A continuación se va a explicar cómo hacer un CRUD paso a paso en vistas basadas en funciones que son el tipo de vistas que estuvimos programando hasta el momento. En los ejemplos que se van a detallar, no se mostrarán los archivos con el contenido completo sino los cambios o agregados necesarios para llegar al resultado esperado y sólo vamos a realizar el CRUD completo para el modelo llamado "Curso", pero las acciones deberian replicarse en todos los modelos que lo requieran.<br>
+Por último, entendemos que continuamos desde lo que dejamos la clase anterior donde ya hicimos la parte de *Create* usando formularios.<br>
+Damos por hecho que tenemos en nuestro proyecto el archivo **forms.py**:
+```python
+from django import forms
+
+class CursoFormulario(forms.Form):
+    curso = forms.CharField()
+    camada = forms.IntegerField()
+
+class BuscaCursoForm(forms.Form):
+    curso = forms.CharField()
+```
+### Create (Crear)
+1. Para crear nuevos registros en la base de datos, seguimos los pasos de la clase anterior donde nos habíamos apoyado en el uso de formularios.<br>
+Agregar el path para la vista donde colocaremos la lógica asociada a la creación de un nuevo registro de la tabla Curso.<br>
+Archivo **urls.py**:
+    ```python
+    from AppCoder import views
+
+    urlpatterns = [
+        path('crear_cursos/', views.crear_cursos, name="CrearCursos"),
+    ]
+    ```
+2. Creamos la vista que toma dos decisiones, si el método fue GET sólo muestra el formulario vacío para ser rellenado por el usuario y si el método fue POST obtenemos del request los datos del formulario y los utilizamos para crear un nuevo registro.<br>
+Archivo **views.py**:
+    ```python
+    from django.shortcuts import render
+    from .models import Curso
+    from AppCoder.forms import CursoFormulario, BuscaCursoForm
+
+    def crear_cursos(request):
+
+        if request.method == "POST":
+            miFormulario = CursoFormulario(request.POST)
+            
+            if miFormulario.is_valid():
+                informacion = miFormulario.cleaned_data
+                curso = Curso(nombre=informacion["curso"], camada=informacion["camada"])
+                curso.save()
+                return render(request, "AppCoder/index.html")
+        else:
+            miFormulario = CursoFormulario()
+
+    return render(request, "AppCoder/form_con_api.html", {"miFormulario": miFormulario})
+    ```
+3. Vamos a preparar el template para recibir y mostrar el formulario creado en **forms.py**.<br>
+    Nuestro html quedaría así:
+    ```html
+    {% extends 'AppCoder/base.html' %}
+
+    {% load static %}
+
+    {% block title %} Crear Cursos {% endblock title %}
+
+    {% block main %}
+    
+        <form action="" method="POST">
+            {% csrf_token %}
+            <table>
+                {{ miFormulario.as_table }}
+            </table>
+            <input type="submit" value="Enviar">
+
+        </form>
+    {% endblock main %}
+
+    ```
+
+---
+### Read (Leer)
+1. Para leer todos los registros de la base de datos y mostrarlos en pantalla, comenzaremos por crear el path correspondiente.<br>
+Archivo **urls.py**:
+    ```python
+    from AppCoder import views
+
+    urlpatterns = [
+        path('crear_cursos/', views.crear_cursos, name="CrearCursos"),
+        path('ver_cursos/', views.ver_cursos, name="VerCursos"),
+    ]
+    ```
+2. Creamos la vista que obtiene todos los cursos que hayan en la base de datos y se lo enviamos al template.<br>
+Archivo **views.py**:
+    ```python
+    from django.shortcuts import render
+    from .models import Curso
+    from AppCoder.forms import CursoFormulario, BuscaCursoForm
+
+    def crear_cursos(request):
+
+        if request.method == "POST":
+            miFormulario = CursoFormulario(request.POST)
+            
+            if miFormulario.is_valid():
+                informacion = miFormulario.cleaned_data
+                curso = Curso(nombre=informacion["curso"], camada=informacion["camada"])
+                curso.save()
+                return render(request, "AppCoder/index.html")
+        else:
+            miFormulario = CursoFormulario()
+
+    return render(request, "AppCoder/form_con_api.html", {"miFormulario": miFormulario})
+    ```
+3. Luego, vamos a ubicar las partes donde consideramos que cambiarían en cada página y la encerramos entre el juego de llaves y porcentajes: {% %}.<br>
     Por ejemplo, si queremos que el título de la pestaña cambie en función a la página que se visita, podemos escribir lo siguiente:<br>
     `{% block title %} Index {% endblock title %}`<br>
     De ésta forma, cada página que hereda del html base podrá ingresar su propio título o bien, si no colocamos nada en la página que hereda quedará por defecto "Index".<br>
-    Nuestro html de base quedaría así:
-    ```html
-    <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            {% load static %}
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-            <meta name="description" content="" />
-            <meta name="author" content="" />
-            <title>{% block title %} Index {% endblock title %}</title>
-            <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-            <!-- Font Awesome icons (free version)-->
-            <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-            <!-- Core theme CSS (includes Bootstrap)-->
-            <link href="{% static 'AppCoder/css/styles.css' %}" rel="stylesheet" />
-        </head>
-        <body id="page-top">
-            <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-                <div class="container px-5">
-                    <a class="navbar-brand" href="#page-top">Start Bootstrap</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarResponsive">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item"><a class="nav-link" href="#!">Iniciar sesión</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#!">Crear cuenta</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            {% block main %}
-            {% endblock main %}
-            <!-- Footer-->
-            <footer class="py-5 bg-black">
-                <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; Your Website 2023</p></div>
-            </footer>
-        </body>
-    </html>
-
-    ```
-4. Por último, creamos todos los html que heredan de ese archivo base:
-    - Indicar que vamos a heredear del otro archivo: `{% extends 'AppCoder/base.html' %}`
-    - También cargamos los estáticos: `{% load static %}`
-    - Y creamos el bloque que queremos incrustar: `{% block title %} Template hecho con Herencia {% endblock title %}`
-    
+    Nuestro html quedaría así:
     ```html
     {% extends 'AppCoder/base.html' %}
-    
+
     {% load static %}
 
-    {% block title %} Template hecho con Herencia {% endblock title %}
+    {% block title %} Crear Cursos {% endblock title %}
 
     {% block main %}
-    <h1>Este es el título del Inicio que cambio</h1>
-    <p>Se ha heredado todo desde la plantilla padre</p>
-    <h3>En el hijo, inicio.html, casí no hay nada :)</h3>
+    
+        <form action="" method="POST">
+            {% csrf_token %}
+            <table>
+                {{ miFormulario.as_table }}
+            </table>
+            <input type="submit" value="Enviar">
+
+        </form>
     {% endblock main %}
+
     ```
 
----
-### Navegando entre templates
+
+
+
 Para navegar en nuestro sitio, debemos utilizar una sintaxis diferente dentro de nuestros html.
 1. Vamos a indicar en nuestro **urls.py** un nombre para cada url:
     ```python
