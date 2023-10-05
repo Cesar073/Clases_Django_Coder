@@ -13,8 +13,8 @@ def login_request(request):
         form = AuthenticationForm(request, data = request.POST)
         print(form)
         if form.is_valid():
-            usuario = form.cleaned_data.get("user")
-            clave = form.cleaned_data.get("pwd")
+            usuario = form.cleaned_data.get("username")
+            clave = form.cleaned_data.get("password")
 
             nombre_usuario = authenticate(username=usuario, password=clave)
 
