@@ -1,0 +1,25 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+    
+
+
+<form method="POST">
+    {% csrf_token %}
+    <div>{{ form.nombre }}</div>
+    <div>{{ form.camada }}</div>
+    
+    <input type="submit" value="Enviar">
+
+</form>
+
+
+
+
+{% endblock main %}
+
+

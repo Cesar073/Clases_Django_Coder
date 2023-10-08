@@ -1,0 +1,36 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+    
+
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Guido Van Rossum">
+        <label for="nombre">Nombre</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Guido Van Rossum">
+        <label for="apellido">Apellido</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+        <label for="email">Email</label>
+    </div>
+    
+    <input type="submit" value="Enviar">
+
+</form>
+
+
+
+
+{% endblock main %}
+
+

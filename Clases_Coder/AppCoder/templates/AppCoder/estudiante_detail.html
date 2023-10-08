@@ -1,0 +1,18 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+    
+
+
+NOMBRE: {{ curso.nombre }}<br>
+<button type="button" class="btn btn-dark"><a href="{% url 'EstudianteList' %}">Regresar</a></button>
+
+
+
+{% endblock main %}
+
+

@@ -15,11 +15,11 @@ from .forms import CambiarPasswordForm
 
 # Create your views here.
 def login_request(request):
-
+    msg_login = ""
     if request.method == 'POST':
-        form = AuthenticationForm(request, data = request.POST)
+        form = AuthenticationForm(request, data=request.POST)
 
-        if form.is_valid():  # Si pasó la validación de Django
+        if form.is_valid():
 
             usuario = form.cleaned_data.get('username')
             contrasenia = form.cleaned_data.get('password')
@@ -28,34 +28,29 @@ def login_request(request):
 
             if user is not None:
                 login(request, user)
-                return render(request, "AppCoder/index.html", {"mensaje":f"Bienvenido {usuario}"})
-            else:
-                return render(request, "AppCoder/index.html", {"mensaje":"Datos incorrectos"})
-        else:
-            return render(request, "AppCoder/index.html", {"mensaje":"Formulario erroneo"})
+                return render(request, "AppCoder/index.html")
+
+        msg_login = "Usuario o contraseña incorrectos"
 
     form = AuthenticationForm()
-
-    return render(request, "users/login.html", {"form": form})
+    return render(request, "users/login.html", {"form": form, "msg_login": msg_login})
 
 # Vista de registro
 def register(request):
-
+    msg_register = ""
     if request.method == 'POST':
 
-        # form = UserCreationForm(request.POST)
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-
-            username = form.cleaned_data['username']
+            # Si los datos ingresados en el form son válidos, con form.save()
+            # creamos un nuevo user usando esos datos
             form.save()
-            return render(request,"AppCoder/index.html" ,  {"mensaje":"Usuario Creado :)"})
+            return render(request,"AppCoder/index.html")
+        
+        msg_register = "Error en los datos ingresados"
 
-    else:
-        # form = UserCreationForm()       
-        form = UserRegisterForm()     
-
-    return render(request,"users/registro.html" ,  {"form":form})
+    form = UserRegisterForm()     
+    return render(request,"users/registro.html" ,  {"form":form, "msg_register": msg_register})
 
 # Vista de editar el perfil
 @login_required

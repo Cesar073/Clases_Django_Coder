@@ -5,13 +5,24 @@
 {% block title %} Login {% endblock title %}
 
 {% block main %}
-    <!-- action: representa la url a la que nos va a re-dirigir. Tiene prioridad
-    por sobre la redirección que podamos colocar en views.py -->
-    <form action="" method="POST">
-        {% csrf_token %}
-        
-        {{ form.as_p }}
-        <input type="submit" value="Enviar">
 
-    </form>
+    {# Este div sólo está agregado para centrar el formulario en la página usando Bootstrap #}
+    <div class="d-flex justify-content-center">
+
+        {# Con este div colocamos el título y debajo el formulario usando Bootstrap #}
+        <div class="d-flex flex-column">
+
+            {# Mensaje personalizado en la vista de Login con estilos de Bootstrap #}
+            <p class="fs-5 fw-bold">{{ msg_login }}</p>
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                
+                {{ form.as_p }}
+                <input type="submit" value="Enviar">
+
+            </form>
+
+        </div>
+    </div>
 {% endblock main %}

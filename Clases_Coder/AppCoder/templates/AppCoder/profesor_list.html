@@ -1,0 +1,27 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Inicio {% endblock title %}
+
+{% block main %}
+
+
+<div class="row">
+    {% for profesor in object_list %}
+        <div class="card" style="width: 18rem;" >
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+            <p class="card-title">CAMADA: {{ profesor.apellido }}, {{ profesor.nombre }}</p>
+            <p class="card-text">EMAIL: {{ profesor.email }}</p>
+            <a href="{% url 'ProfesorDetail' profesor.id %}" class="btn btn-primary">Ver</a>
+            <a href="{% url 'ProfesorUpdate' profesor.id %}" class="btn btn-primary">Editar</a>
+            <a href="{% url 'ProfesorDelete' profesor.id %}" class="btn btn-primary">Borrar</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<a class="btn btn-primary btn-xl rounded-pill mt-5" href="{% url 'ProfesorCreate' %}">Agregar nuevo</a>
+
+{% endblock main %}
