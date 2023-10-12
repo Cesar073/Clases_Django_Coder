@@ -1,15 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
-# Create your models here.
 # Clase 24
-class Avatar(models.Model):
+class Imagen(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    imagen = models.ImageField(upload_to='avatares', null=True, blank = True)
-
-    @property
-    def d(self):
-        return self.user.last_name
+    imagen = models.ImageField(upload_to='imagenes', null=True, blank = True)
 
     def __str__(self):
-        return f"{self.user} - {self.imagen}"
+        return f"{settings.MEDIA_URL}{self.imagen}"

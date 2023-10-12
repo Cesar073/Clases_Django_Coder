@@ -2,28 +2,21 @@ from django.shortcuts import render
 from .models import Curso
 from AppCoder.forms import CursoFormulario, BuscaCursoForm
 from django.contrib.auth.decorators import login_required
-from users.models import Avatar
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Curso, Estudiante, Profesor, Entregable
 from django.urls import reverse_lazy
+from users.models import Imagen
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Dejamos la vista INICIO basada en funciones y visible para todos
 def inicio(request):
-    return render(request, "AppCoder/index.html")
-
-def inicio_24(request):
-    
-    try:
-        url = Avatar.objects.filter(user=request.user.id)[0].imagen.url
-    except IndexError:
-        url = None
-
-    return render(request, "AppCoder/index.html", {"url": url})
+    # imagen = Imagen.objects.filter(user=request.user.id)[0]
+    # print(imagen)
+    return render(request, "AppCoder/index.html")# , {"url": imagen})
 
 
 # Dejamos una vista basada en funciones que requiere login para mostrar el uso de @login_required

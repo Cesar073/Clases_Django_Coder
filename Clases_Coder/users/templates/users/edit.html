@@ -1,0 +1,21 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Login {% endblock title %}
+
+{% block main %}
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <table>
+
+            {{ mi_form.as_table }}
+            <input type="submit" value="Actualizar">
+
+        </table>
+
+
+    </form>
+
+{% endblock main %}
