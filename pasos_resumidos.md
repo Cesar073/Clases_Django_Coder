@@ -24,7 +24,7 @@ def probando_template(request):
     # Cerramos el archivo previamente abierto, ya que lo tenemos cargado en la variable plantilla
     mi_html.close()
 
-    # Creamos un contexto, más adelante vamos a aprender a usarlo, ahora lo necesitamos aunque sea vacío para que funcione
+    # Creamos un contexto con los datos del diccionario
     mi_contexto = Context(diccionario)
 
     # Terminamos de construír el template renderizándolo con su contexto
