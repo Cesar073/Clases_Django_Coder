@@ -24,17 +24,44 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
             <div class="container px-5">
-                <a class="navbar-brand" href="#page-top">Start Bootstrap</a>
+                <a class="navbar-brand" href="#page-top">Coder</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Inicio' %}">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Profesores' %}">Profesores</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Estudiantes' %}">Estudiantes</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Cursos' %}">Cursos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'Entregables' %}">Entregables</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Iniciar sesión</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Crear cuenta</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'Inicio' %}">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'EstudianteList' %}">Estudiantes</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'ProfesorList' %}">Profesores</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'CursoList' %}">Cursos</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{% url 'EntregableList' %}">Entregables</a></li>
+                        
+                        
+                        {# DROPDOWN PARA LA CUENTA DE USUARIO #}
+                        {% if request.user.is_authenticated %}
+                            {% if user_avatar %}
+                                <img src="{{user_avatar}}" alt="" style="height: 40px;width: 40px;">
+                            {% endif %}
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ request.user.username }}
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="{% url 'Edit' %}">Editar cuenta</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'Logout' %}">Cerrar sesión</a></li>
+                                </ul>
+                            </div>
+
+                        {% else %}
+
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Cuenta
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item" href="{% url 'Login' %}">Inciar Sesión</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'Register' %}">Crear cuenta</a></li>
+                                </ul>
+                            </div>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -54,9 +81,12 @@
             <div class="bg-circle-4 bg-circle"></div>
         </header>
 
-        {% block main %}
-        {% endblock main %}
-        
+        <p>{{ mensaje }}</p>
+        <div  class="container">
+            {% block main %}
+            {% endblock main %}
+        </div>
+            
         <!-- Footer-->
         <footer class="py-5 bg-black">
             <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; Your Website 2023</p></div>
@@ -66,3 +96,4 @@
 
     </body>
 </html>
+
