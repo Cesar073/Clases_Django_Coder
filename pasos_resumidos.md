@@ -1,6 +1,14 @@
 # CLASES DE DJANGO EN CODERHOUSE
 
-## CLASE 4: Clase 20 - Playground intermedio Parte II
+## CLASE 7: Clase 23 - Playground Avanzado Parte II
+
+**Resumen:**<br>
+Se crean formularios para la autenticación de usuarios. Un apartado para el login, logout y el registro. Al mismo tiempo se restringe el acceso a ciertas páginas del sitio para los usuarios que no estén debidamente logueados.<br>
+El proyecto contiene creadas 3 cuentas de usuario para las pruebas:<br>
+Coder_cuenta_super -> Pass: c0d3r_h0u53<br>
+Coder_cuenta_staff -> Pass: c0d3r_h0u53<br>
+Coder_cuenta_comun -> Pass: c0d3r_h0u53<br>
+
 ---
 ### Entorno virtual
 Interpretamos que el entorno virtual es activado en cada clase.
@@ -9,126 +17,239 @@ Interpretamos que el entorno virtual es activado en cada clase.
 ### Git
 1. `git checkout main`
 2. `git pull`
-3. `git checkout -b clase_20-Playground_intermedio_Parte_II`
+3. `git checkout -b clase_23-Playground_Avanzado_Parte_II`
 
 ---
-### Herencia de Templates
-1. Crear el archivo base:
-    ```html
-    <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            {% load static %}
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-            <meta name="description" content="" />
-            <meta name="author" content="" />
-            <title>{% block title %} Index {% endblock title %}</title>
-            <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-            <!-- Font Awesome icons (free version)-->
-            <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-            <!-- Core theme CSS (includes Bootstrap)-->
-            <link href="{% static 'AppCoder/css/styles.css' %}" rel="stylesheet" />
-        </head>
-        <body id="page-top">
-            <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-                <div class="container px-5">
-                    <a class="navbar-brand" href="#page-top">Start Bootstrap</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarResponsive">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item"><a class="nav-link" href="#!">Iniciar sesión</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#!">Crear cuenta</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            {% block main %}
-            {% endblock main %}
-            <!-- Footer-->
-            <footer class="py-5 bg-black">
-                <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; Your Website 2023</p></div>
-            </footer>
-        </body>
-    </html>
+### Preparación
+1. Creamos la app: `python manage.py startapp users`
+2. Actualizamos **INSTALLED_APPS**:
+    ```python
+        INSTALLED_APPS = [
+            'django.contrib.admin',
+            'django.contrib.auth',
+            'django.contrib.contenttypes',
+            'django.contrib.sessions',
+            'django.contrib.messages',
+            'django.contrib.staticfiles',
+            'AppCoder',
+            'users'
+        ]
     ```
-2. Creamos todos los html que heredan de ese archivo base:
-    - Indicar que vamos a heredear del otro archivo: `{% extends 'AppCoder/base.html' %}`
-    - También cargamos los estáticos: `{% load static %}`
-    - Y creamos el bloque que queremos incrustar: `{% block title %} Template hecho con Herencia {% endblock title %}`
-    
+3. **users/urls.py**:
+    ```python
+    from django.urls import path
+
+    urlpatterns = []
+    ```
+4. **Clases_Coder/urls.py**:
+    ```python
+    from django.contrib import admin
+    from django.urls import path, include
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('', include('AppCoder.urls')),
+        path('users/', include('users.urls'))
+    ]
+    ```
+
+---
+### Login
+1. Creamos un template `templates/AppCoder/base.html`:
     ```html
     {% extends 'AppCoder/base.html' %}
-    
+
     {% load static %}
 
-    {% block title %} Template hecho con Herencia {% endblock title %}
+    {% block title %} Login {% endblock title %}
 
     {% block main %}
-    <h1>Este es el título del Inicio que cambio</h1>
-    <p>Se ha heredado todo desde la plantilla padre</p>
-    <h3>En el hijo, inicio.html, casí no hay nada :)</h3>
+
+        {# Este div sólo está agregado para centrar el formulario en la página usando Bootstrap #}
+        <div class="d-flex justify-content-center">
+
+            {# Con este div colocamos el título y debajo el formulario usando Bootstrap #}
+            <div class="d-flex flex-column">
+
+                {# Mensaje personalizado en la vista de Login con estilos de Bootstrap #}
+                <p class="fs-5 fw-bold">{{ msg_login }}</p>
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    
+                    {{ form.as_p }}
+                    <input type="submit" value="Iniciar sesión">
+
+                </form>
+
+            </div>
+        </div>
     {% endblock main %}
     ```
 
----
-### Navegando entre templates
-1. Vamos a indicar en nuestro **urls.py** un nombre para cada url:
+2. **users/urls.py**:
     ```python
+    from django.urls import path
+    from users import views
+
     urlpatterns = [
-        path('/', views.inicio, name="Inicio"),
-        path('profesores/', views.profesores, name="Profesores"),
-        path('estudiantes/', views.estudiantes, name="Estudiantes"),
-        path('cursos/', views.cursos, name="Cursos"),
-        path('entregables/', views.entregables, name="Entregables")
+        path('login/', views.login_request, name="Login")
     ]
     ```
-2. Llamados a nuestros links:
-    ```html
-    <nav class="navbar navbar-light bg-light static-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
-            <a class="navbar-brand" href="{% url 'Profesores' %}">Profesores</a>
-            <a class="navbar-brand" href="{% url 'Estudiantes' %}">Estudiantes</a>
-            <a class="navbar-brand" href="{% url 'Cursos' %}">Cursos</a>
-            <a class="navbar-brand" href="{% url 'Entregables' %}">Entregables</a>
-            <a class="btn btn-primary" href="#NADAAUN">INICIAR</a>
-        </div>
-    </nav>
-    ```
+
 3. **views.py**:
     ```python
     from django.shortcuts import render
+    from django.contrib.auth.forms import AuthenticationForm
+    from django.contrib.auth import login
 
-    def inicio(request):
-        return render(request, "AppCoder/index.html")
+    def login_request(request):
+
+        msg_login = ""
+        if request.method == 'POST':
+            form = AuthenticationForm(request, data=request.POST)
+
+            if form.is_valid():
+
+                usuario = form.cleaned_data.get('username')
+                contrasenia = form.cleaned_data.get('password')
+
+                user = authenticate(username=usuario, password=contrasenia)
+
+                if user is not None:
+                    login(request, user)
+                    return render(request, "AppCoder/index.html")
+
+            msg_login = "Usuario o contraseña incorrectos"
+
+        form = AuthenticationForm()
+        return render(request, "users/login.html", {"form": form, "msg_login": msg_login})
     ```
 
 ---
-### Panel Admin de Django
-1. **admin.py**:
+### Registro
+1. **views.py**:
     ```python
-    from django.contrib import admin
-    from .models import Profesor, Estudiante, Curso, Entregable
+    from .forms import UserRegisterForm
 
-    admin.site.register(Profesor)
-    admin.site.register(Estudiante)
-    admin.site.register(Curso)
-    admin.site.register(Entregable)
+    def register(request):
+    
+        msg_register = ""
+        if request.method == 'POST':
+
+            form = UserRegisterForm(request.POST)
+            if form.is_valid():
+                # Si los datos ingresados en el form son válidos, con form.save()
+                # creamos un nuevo user usando esos datos
+                form.save()
+                return render(request,"AppCoder/index.html")
+            
+            msg_register = "Error en los datos ingresados"
+
+        form = UserRegisterForm()     
+        return render(request,"users/registro.html" ,  {"form":form, "msg_register": msg_register})
     ```
-2. Consola de Django:
-    - `python manage.py createsuperuser`
-    - Cargamos un user
-    - Cargamos un mail
-    - Cargamos el password y lo repetimos
+2. Agregamos el path a las urls de la app "users": `path('register/', views.register, name="Register")`
+3. Creamos el template `users/registro.html`:
+    ```html
+    {% extends 'AppCoder/base.html' %}
 
-3. Ya podemos ingresar a nuestro panel de Admin.
+    {% load static %}
+
+    {% block title %} Login {% endblock title %}
+
+    {% block main %}
+
+        {# Este div sólo está agregado para centrar el formulario en la página usando Bootstrap #}
+        <div class="d-flex justify-content-center">
+
+            {# Con este div colocamos el título y debajo el formulario usando Bootstrap #}
+            <div class="d-flex flex-column">
+
+                {# Mensaje personalizado en la vista de Login con estilos de Bootstrap #}
+                <p class="fs-5 fw-bold">{{ msg_register }}</p>
+
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    
+                    {{ form.as_p }}
+                    <input type="submit" value="Registrarse">
+
+                </form>
+
+            </div>
+        </div>
+    {% endblock main %}
+    ```
+
+4. Creamos el formulario **users/forms.py**:
+    ```python
+    from django import forms
+    from django.contrib.auth.forms import UserCreationForm
+
+    class UserRegisterForm(UserCreationForm):
+        email = forms.EmailField()
+        password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
+        password2 = forms.CharField(label='Repetir contraseña', widget=forms.PasswordInput)
+
+        class Meta:
+            model = User
+            fields = ["username", "email", "password1", "password2"]
+            # Si queremos EDIAR los mensajes de ayuda editamos este dict,
+                # de lo contrario lo limpiamos de ésta forma.
+            help_text = {k: "" for k in fields}
+    ```
+
+---
+### Logout
+1. **urls.py**:
+    ```python
+    from django.urls import path
+    from users import views
+    from django.contrib.auth.views import LogoutView
+
+    urlpatterns = [
+        path('login/', views.login_request, name="Login"),
+        path('register/', views.register, name="Register"),
+        path('logout/', LogoutView.as_view(template_name='AppCoder/index.html'), name="Logout")
+    ]
+    ```
+    > NOTA: El parámetro **template_name** que le enviamos al método `LogoutView.as_view()`, indica el template al que se nos redirigirá una vez deslogueado.
+
+---
+### Mixin - LoginRequiredMixin
+**views.py**:
+```python
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+class CursoListView(LoginRequiredMixin, ListView):
+    model = Curso
+    template_name = "AppCoder/curso_list.html"
+
+
+class CursoDetailView(LoginRequiredMixin, DetailView):
+    model = Curso
+    template_name = "AppCoder/curso_detail.html"
+```
+
+---
+### Decorador - login_required
+**views.py**:
+```python
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def about(request):
+    return render(request, "AppCoder/about.html")
+```
+
+### Retoque final
+**settings.py**: `LOGIN_URL = "/users/login/"`
 
 ---
 ### Subimos los cambios a GitHub
 1. Subimos los cambios a nuestro repositorio de GitHub:
     * `git add .`
-    * `git commit -m "Agregamos Herencia e iniciamos el Admin de Django"`
-    * `git push --set-upstream origin clase_20-Playground_intermedio_Parte_II`
+    * `git commit -m "Agregamos login, registro y logout"`
+    * `git push --set-upstream origin clase_23-Playground_Avanzado_Parte_II`
 2. En Github realizamos un PR y hacemos el merge a **main**.

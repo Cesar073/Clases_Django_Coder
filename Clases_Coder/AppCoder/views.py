@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from .models import Curso
-from AppCoder.forms import CursoFormulario, BuscaCursoForm
 from django.contrib.auth.decorators import login_required
-from users.models import Avatar
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -15,15 +13,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Dejamos la vista INICIO basada en funciones y visible para todos
 def inicio(request):
     return render(request, "AppCoder/index.html")
-
-def inicio_24(request):
-    
-    try:
-        url = Avatar.objects.filter(user=request.user.id)[0].imagen.url
-    except IndexError:
-        url = None
-
-    return render(request, "AppCoder/index.html", {"url": url})
 
 
 # Dejamos una vista basada en funciones que requiere login para mostrar el uso de @login_required
@@ -45,10 +34,10 @@ class CursoDetailView(LoginRequiredMixin, DetailView):
     model = Curso
     template_name = "AppCoder/curso_detail.html"
 
-    # login_url = '/users/login/'
+    login_url = '/users/login/'
 
-    # def get_login_url(self):
-    #     return self.login_url
+    def get_login_url(self):
+        return self.login_url
 
 
 class CursoCreateView(LoginRequiredMixin, CreateView):
@@ -173,7 +162,3 @@ class EntregableDeleteView(LoginRequiredMixin, DeleteView):
     model = Entregable
     success_url = reverse_lazy("EntregableList")
     template_name = 'AppCoder/entregable_confirm_delete.html'
-
-
-
-
