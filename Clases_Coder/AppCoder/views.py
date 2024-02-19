@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from .models import Curso
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -15,14 +13,12 @@ def inicio(request):
     return render(request, "AppCoder/index.html")
 
 
-# Dejamos una vista basada en funciones que requiere login para mostrar el uso de @login_required
-@login_required
 def about(request):
     return render(request, "AppCoder/about.html")
 
 
 # VISTAS BASADAS EN CLASES - CURSOS
-class CursoListView(LoginRequiredMixin, ListView):
+class CursoListView(ListView):
     model = Curso
     template_name = "AppCoder/curso_list.html"
 
@@ -30,7 +26,7 @@ class CursoListView(LoginRequiredMixin, ListView):
         return super().get(request, *args, **kwargs)
 
 
-class CursoDetailView(LoginRequiredMixin, DetailView):
+class CursoDetailView(DetailView):
     model = Curso
     template_name = "AppCoder/curso_detail.html"
 
@@ -43,7 +39,7 @@ class CursoDetailView(LoginRequiredMixin, DetailView):
     # FIN DEL CÓDIGO AGREGADO
 
 
-class CursoCreateView(LoginRequiredMixin, CreateView):
+class CursoCreateView(CreateView):
     """
     Esta clase envía por defecto un formulario al archivo html. Envía los campos indicados en la lista "fields" y podemos hacer uso de dicho formulario bajo la key "form".
     """
@@ -60,31 +56,31 @@ class CursoCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("CursoList")
 
 
-class CursoUpdateView(LoginRequiredMixin, UpdateView):
+class CursoUpdateView(UpdateView):
     model = Curso
     success_url = reverse_lazy("CursoList")
     fields = ["nombre", "camada"]
     template_name = "AppCoder/curso_update.html"
 
 
-class CursoDeleteView(LoginRequiredMixin, DeleteView):
+class CursoDeleteView(DeleteView):
     model = Curso
     success_url = reverse_lazy("CursoList")
     template_name = 'AppCoder/curso_confirm_delete.html'
 
 
 # VISTAS BASADAS EN CLASES - ESTUDIANTES
-class EstudianteListView(LoginRequiredMixin, ListView):
+class EstudianteListView(ListView):
     model = Estudiante
     template_name = "AppCoder/estudiante_list.html"
 
 
-class EstudianteDetailView(LoginRequiredMixin, DetailView):
+class EstudianteDetailView(DetailView):
     model = Estudiante
     template_name = "AppCoder/estudiante_detail.html"
 
 
-class EstudianteCreateView(LoginRequiredMixin, CreateView):
+class EstudianteCreateView(CreateView):
 
     model = Estudiante
     template_name = "AppCoder/estudiante_create.html"
@@ -92,76 +88,76 @@ class EstudianteCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("EstudianteList")
 
 
-class EstudianteUpdateView(LoginRequiredMixin, UpdateView):
+class EstudianteUpdateView(UpdateView):
     model = Estudiante
     success_url = reverse_lazy("EstudianteList")
     fields = ["nombre", "apellido", "email"]
     template_name = "AppCoder/estudiante_update.html"
 
 
-class EstudianteDeleteView(LoginRequiredMixin, DeleteView):
+class EstudianteDeleteView(DeleteView):
     model = Estudiante
     success_url = reverse_lazy("EstudianteList")
     template_name = 'AppCoder/estudiante_confirm_delete.html'
 
 
 # VISTAS BASADAS EN CLASES - PROFESORES
-class ProfesorListView(LoginRequiredMixin, ListView):
+class ProfesorListView(ListView):
     model = Profesor
     template_name = "AppCoder/profesor_list.html"
 
 
-class ProfesorDetailView(LoginRequiredMixin, DetailView):
+class ProfesorDetailView(DetailView):
     model = Profesor
     template_name = "AppCoder/profesor_detail.html"
 
 
-class ProfesorCreateView(LoginRequiredMixin, CreateView):
+class ProfesorCreateView(CreateView):
     model = Profesor
     template_name = "AppCoder/profesor_create.html"
     fields = ["nombre", "apellido", "email"]
     success_url = reverse_lazy("ProfesorList")
 
 
-class ProfesorUpdateView(LoginRequiredMixin, UpdateView):
+class ProfesorUpdateView(UpdateView):
     model = Profesor
     success_url = reverse_lazy("ProfesorList")
     fields = ["nombre", "apellido", "email"]
     template_name = "AppCoder/profesor_update.html"
 
 
-class ProfesorDeleteView(LoginRequiredMixin, DeleteView):
+class ProfesorDeleteView(DeleteView):
     model = Profesor
     success_url = reverse_lazy("ProfesorList")
     template_name = 'AppCoder/profesor_confirm_delete.html'
 
 
 # VISTAS BASADAS EN CLASES - ENTREGABLES
-class EntregableListView(LoginRequiredMixin, ListView):
+class EntregableListView(ListView):
     model = Entregable
     template_name = "AppCoder/entregable_list.html"
 
 
-class EntregableDetailView(LoginRequiredMixin, DetailView):
+class EntregableDetailView(DetailView):
     model = Entregable
     template_name = "AppCoder/entregable_detail.html"
 
 
-class EntregableCreateView(LoginRequiredMixin, CreateView):
+class EntregableCreateView(CreateView):
     model = Entregable
     template_name = "AppCoder/entregable_create.html"
     fields = ["nombre", "fecha_de_entrega", "entregado"]
     success_url = reverse_lazy("EntregableList")
 
 
-class EntregableUpdateView(LoginRequiredMixin, UpdateView):
+class EntregableUpdateView(UpdateView):
     model = Entregable
     success_url = reverse_lazy("EntregableList")
     fields = ["nombre", "fecha_de_entrega", "entregado"]
     template_name = "AppCoder/entregable_update.html"
 
 
-class EntregableDeleteView(LoginRequiredMixin, DeleteView):
+class EntregableDeleteView(DeleteView):
     model = Entregable
     success_url = reverse_lazy("EntregableList")
     template_name = 'AppCoder/entregable_confirm_delete.html'
