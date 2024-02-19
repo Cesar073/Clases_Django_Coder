@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
 from .forms import UserRegisterForm
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 def login_request(request):
@@ -19,7 +20,8 @@ def login_request(request):
 
             if user is not None:
                 login(request, user)
-                return render(request, "AppCoder/index.html")
+                next_url = request.GET.get("next", "/")
+                return HttpResponseRedirect(next_url)
 
         msg_login = "Usuario o contraseña incorrectos"
 

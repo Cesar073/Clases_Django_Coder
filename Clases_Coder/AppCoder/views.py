@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from .models import Curso
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Curso, Estudiante, Profesor, Entregable
 from django.urls import reverse_lazy
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Dejamos la vista INICIO basada en funciones y visible para todos
@@ -34,10 +34,13 @@ class CursoDetailView(LoginRequiredMixin, DetailView):
     model = Curso
     template_name = "AppCoder/curso_detail.html"
 
+    # AGREGADO!
+    # Esta es otra forma para redirigir a un login. Tiene prioridad sobre la configuración del settings.py
     login_url = '/users/login/'
 
     def get_login_url(self):
         return self.login_url
+    # FIN DEL CÓDIGO AGREGADO
 
 
 class CursoCreateView(LoginRequiredMixin, CreateView):
