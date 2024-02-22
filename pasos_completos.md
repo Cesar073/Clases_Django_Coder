@@ -250,10 +250,11 @@ Luego agregaremos un condicional, ya que si un usuario aún no está autenticado
     Ahora pasaremos a mostrar en la web la imagen que el usuario haya subido como su avatar. Agregamos en la navbar lo siguiente:
     ```html
     {% if request.user.is_authenticated %}
-        <img src="{{(Avatar.objects.filter(user=request.user.id))[0].imagen.url}}"/>
+        <img height="40px" src="{{(Avatar.objects.filter(user=request.user.id))[0].imagen.url}}"/>
         <p> class="text-muted small mb-4 -b-lg-0"> Hola, {{user.username}}!!!.</p>
     {% endif %}
     ```
+
     **views.py**<br>
     Otra manera sería enviándolo desde cada vista con el contexto:
     ```python
@@ -267,6 +268,42 @@ Luego agregaremos un condicional, ya que si un usuario aún no está autenticado
         )
     ```
 
+8. **views.py**<br>
+    A continuación, crearemos la vista y el formulario para que se pueda subir el Avatar.<br>
+    ```python
+    @login_required
+    def agregar_avatar(request):
+        
+        if request.method == "POST":
+            mi_form = AvatarFormulario(request.POST, request.FILES)
+        
+            if mi_form.is_valid():
+                user = User.objects.get(username=request.user)
+                avatar = Avatar(user=user, imagen=mi_form.cleaned_data['imagen'])
+                avatar.save()
+                
+                return render(request, "AppCocer/index.html")
+        else:
+            mi_form = AvatarFormulario()
+        
+        context_data = {"mi_form": mi_form}
+        return render(request, "users/agregar_avatar.html", context_data)
+    ```
+
+9. **agregar_avatar.html**<br>
+    Vamos a agregar el formulario en el html, con la única diferencia a la implementación de formularios que veníamos realizando es que le agregamos la posibilidad de subir archivos con: `enctype="multipart/form-data"`:
+    ```html
+    <body>
+        <h3>Cargar Avatar</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ mi_form.as_p }}
+            <input type="submit" value="Actualizar">
+        </form>
+    <body>
+
+10. **users/urls.py**<br>
+    Agregaremos el path asociado a esta vista dentro del archivo urls.py y dentro de la lista **urlpatterns**: `path('agregar_avatar', views.agregar_avatar, name="AgregarAvatar")`
 
 ---
 ### Unit test
