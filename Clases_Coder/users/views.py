@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from users.forms import UserEditForm, UserRegisterForm
 from users.models import Imagen
 
+#c0d3r_h0u53
 
 # Create your views here.
 def login_request(request):
@@ -40,8 +41,9 @@ def register(request):
             # creamos un nuevo user usando esos datos
             form.save()
             return render(request,"AppCoder/index.html")
-        
-        msg_register = "Error en los datos ingresados"
+        else:
+            msg_register = "Error en los datos ingresados"
+            msg_register += f" | {form.errors}"
 
     form = UserRegisterForm()     
     return render(request,"users/registro.html" ,  {"form":form, "msg_register": msg_register})
@@ -98,5 +100,5 @@ def editar_perfil(request):
         }
         miFormulario = UserEditForm(initial=datos)
 
-    return render(request, "users/edit.html", {"mi_form": miFormulario, "usuario": usuario})
+    return render(request, "users/editar_usuario.html", {"mi_form": miFormulario, "usuario": usuario})
 
