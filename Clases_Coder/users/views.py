@@ -47,14 +47,18 @@ def register(request):
     return render(request,"users/registro.html" ,  {"form":form, "msg_register": msg_register})
 
 # Vista de editar el perfil
+# Obligamos a loguearse para editar los datos del usuario
 @login_required
-def edit(request):
+def editar_perfil(request):
 
+    # El usuario para poder editar su perfil primero debe estar logueado.
+    # Al estar logueado, podremos encontrar dentro del request la instancia
+    # del usuario -> request.user
     usuario = request.user
 
     if request.method == 'POST':
 
-        miFormulario = UserEditForm(request.POST, request.FILES)
+        miFormulario = UserEditForm(request.POST)#, request.FILES)
 
         if miFormulario.is_valid():
 
