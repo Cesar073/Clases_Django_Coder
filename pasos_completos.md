@@ -26,6 +26,20 @@
     `pipenv install -r requirements.txt`
 ---
 
+### Django
+1. Creamos un proyecto de Django. Con el siguiente comando vamos a crear una carpeta en la posición en que nos encontramos y luego dentro de la misma se cargarán los archivos del proyecto:<br>
+    `django-admin startproject <nombre_del_proyecto>`<br>
+    Ej: `django-admin startproject Clases_Coder`
+2. Debido a que hemos creado una subcarpeta, debemos ingresar a la misma para poder interactuar con el archivo **manage.py** de Django:<br>
+    `cd <nombre_del_proyecto>`<br>
+    Ej: `cd Clases_Coder`
+3. Corremos las migraciones. Si bien no es obligatorio, éstas migraciones de Django van a crear las tablas necesarias para el Admin de Django, cuentas de usuario, etc. Asimismo con esta acción evitamos los mensajes de advertencia al iniciar el servidor:<br>
+    `python manage.py migrate`
+4. Opcional: Ya estamos en condiciones de correr el servidor y comprobar que el proyecto está correctamente creado. Con el siguiente comando, Django crea un servidor y lo corre bajo el puerto 8000:<br>
+    * `pyhton manage.py runserver`
+    * Nos dirigimos al navegador y colocamos `localhost:8000` o bien mantemos presionado `Ctrl` y hacemos clic en el link que nos figura en la consola: `http://127.0.0.1:8000/`
+---
+
 ### GitHub
 * En este apartado no explicaremos demasiado, sólo vamos a crear el repositorio y obtenemos la url para vincularlo con el repositorio local de Git.
 ---
@@ -59,20 +73,6 @@
     `git push -u origin main`
 8. Creamos una nueva rama a partir de ésta instancia del **main** y nos movemos a la nueva rama, en nuestro ejemplo se va a llamar **clase_17-Django_Portfolio_Parte_1**:<br>
     `git checkout -b clase_17-Django_Portfolio_Parte_1`
----
-
-### Django
-1. Creamos un proyecto de Django. Con el siguiente comando vamos a crear una carpeta en la posición en que nos encontramos y luego dentro de la misma se cargarán los archivos del proyecto:<br>
-    `django-admin startproject <nombre_del_proyecto>`<br>
-    Ej: `django-admin startproject Clases_Coder`
-2. Debido a que hemos creado una subcarpeta, debemos ingresar a la misma para poder interactuar con el archivo **manage.py** de Django:<br>
-    `cd <nombre_del_proyecto>`<br>
-    Ej: `cd Clases_Coder`
-3. Corremos las migraciones. Si bien no es obligatorio, éstas migraciones de Django van a crear las tablas necesarias para el Admin de Django, cuentas de usuario, etc. Asimismo con esta acción evitamos los mensajes de advertencia al iniciar el servidor:<br>
-    `python manage.py migrate`
-4. Opcional: Ya estamos en condiciones de correr el servidor y comprobar que el proyecto está correctamente creado. Con el siguiente comando, Django crea un servidor y lo corre bajo el puerto 8000:<br>
-    * `pyhton manage.py runserver`
-    * Nos dirigimos al navegador y colocamos `localhost:8000` o bien mantemos presionado `Ctrl` y hacemos clic en el link que nos figura en la consola: `http://127.0.0.1:8000/`
 ---
 
 ### Contenido de la clase

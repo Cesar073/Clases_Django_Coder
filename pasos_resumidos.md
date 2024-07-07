@@ -20,6 +20,12 @@
 2. `pipenv install -r requirements.txt`
 ---
 
+### Django
+1. `django-admin startproject Clases_Coder`
+2. `cd Clases_Coder`
+3. `python manage.py migrate`
+---
+
 ### GitHub
 * En este apartado no explicaremos demasiado, sólo vamos a crear el repositorio y obtenemos la url para vincularlo con el repositorio local de Git.
 ---
@@ -47,11 +53,6 @@
 8. `git checkout -b clase_17-Django_Portfolio_Parte_1`
 ---
 
-### Django
-1. `django-admin startproject Clases_Coder`
-2. `cd Clases_Coder`
-3. `python manage.py migrate`
----
 ### Contenido de la clase
 1. Primero creamos la función de Python que se encargará de devolver el código html al front. Para ello, debemos ingresar a la carpeta de configuración del proyecto y agregar un nuevo archivo llamado **views.py**.
 2. En **views.py** agregamos una función:
