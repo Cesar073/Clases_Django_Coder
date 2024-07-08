@@ -60,7 +60,7 @@ def editar_perfil(request):
 
     if request.method == 'POST':
 
-        miFormulario = UserEditForm(request.POST)#, request.FILES)
+        miFormulario = UserEditForm(request.POST, request.FILES)
 
         if miFormulario.is_valid():
 
