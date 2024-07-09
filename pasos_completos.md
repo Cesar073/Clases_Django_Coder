@@ -97,14 +97,39 @@
     ]
     ```
 4. Podemos comprobar los resultados levantando el servidor ejecutando en la consola: `python manage.py runserver`, y luego agregando a la url dentro del navegador la nueva página: `localhost:8000/saludo/`
-5. Enviando valores usando el método GET:<br>
+5. Pasaje de parámetros:<br>
+    A continuación vamos a enviar datos procesados con Python a la vista, si bien en el ejemplo sólo vamos a mandar el momento del día en que se ejecuta la vista, el proceso puede representar cualquier dato extraído de métodos o funciones internas que luego compartiremos con el front.<br>
+6. En **urls.py** agregamos el path `diaDeHoy/`:
+    ```python
+    from django.contrib import admin
+    from django.urls import path
+    from Clases_Coder.views import saludo, dia_de_hoy
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('saludo/', saludo),
+        path('diaDeHoy/', dia_de_hoy),
+    ]
+    ```
+7. En **views.py** agregamos el método `dia_de_hoy()`:
+    ```python
+    from django.http import HttpResponse
+    # Como vamos a usar datetime para obtener el momento, importamos la librería
+    from datetime import datetime
+
+    def dia_de_hoy(request):
+        dia = datetime.now()
+        return HttpResponse(f"Hoy es día:<br>{dia}")
+    ```
+8. Ya podemos consultar la web y ver sus resultados!: **http://127.0.0.1:8000/diaDeHoy/**
+9. Enviando valores usando el método GET:<br>
     Ahora seguiremos los mismos pasos, pero vamos a enviar información desde el front hacia nuestro back mediante el método GET, el cuál se ejecuta cuando modificamos la url, por lo tanto, en la url vamos a incorporar una variable. En nuestro ejemplo vamos a enviar un nombre y el back creará una página con dicha información. Cabe aclarar que el back puede utilizar ese dato para realizar diversas tareas, como buscar en la base de datos, realizar peticiones a otros servicios, etc.<br>
     Vamos a agregar la función dentro de **views.py**, y dentro de sus parámetros vamos a recibir la variable llamada **nombre**:
     ```python
     def muestra_nombre(request, nombre):
         return HttpResponse(f"Buenos días {nombre}, bienvenido a Coder")
     ```
-6. En el archivo **urls.py** importamos la función y creamos el path dentro de la lista **urlpatterns** para que nos redirija a la función recién creada y además le indicamos que pueda recibir un parámetro extra bajo el nombre de variable **nombre**:
+10. En el archivo **urls.py** importamos la función y creamos el path dentro de la lista **urlpatterns** para que nos redirija a la función recién creada y además le indicamos que pueda recibir un parámetro extra bajo el nombre de variable **nombre**:
     ```python
     from django.contrib import admin
     from django.urls import path
@@ -116,12 +141,12 @@
         path('muestra_nombre/<nombre>/', muestra_nombre),
     ]
     ```
-7. Ya podemos probarlo modificando la url del navegador: `localhost:8000//muestra_nombre/Coder`<br>
+11. Ya podemos probarlo modificando la url del navegador: `localhost:8000//muestra_nombre/Coder`<br>
     Debería aparecer la frase que creamos en la función del **views.py** con el nombre de "Coder", el cuál podemos modificarlo sin problemas desde la url del navegador.
-8. Usando plantillas:<br>
+12. Usando plantillas:<br>
     A continuación vamos a crear un archivo html y que sea dicho archivo el que se envíe al front.<br>
     Para esto, vamos a crear en la misma carpeta que venimos trabajando, una nueva carpeta con el nombre que deseen, para el ejemplo se llamará **plantillas**.
-9. Dentro vamos a crear un archivo html, para el ejemplo se llamará **index.html**.
+13. Dentro vamos a crear un archivo html, para el ejemplo se llamará **index.html**.
     ```html
     <!DOCTYPE html>
     <html lang="en">
@@ -136,7 +161,7 @@
     </body>
     </html>
     ```
-10. Generamos una nueva vista, o sea, una nueva función en el archivo **views.py** que en vez de retornar texto como lo hicimos anteriormente, vamos a retornar el archivo html. Como el código se empieza a extender, sólo mostramos los agregados al archivo y no el contenido completo:
+14. Generamos una nueva vista, o sea, una nueva función en el archivo **views.py** que en vez de retornar texto como lo hicimos anteriormente, vamos a retornar el archivo html. Como el código se empieza a extender, sólo mostramos los agregados al archivo y no el contenido completo:
     ```python
     # Agregamos al encabezado del archivo el import de Template y de Context
     from django.template import Template, Context
@@ -160,7 +185,7 @@
 
         return HttpResponse(documento)
     ```
-11. Editamos nuestro archivo **urls.py** para crear una url que nos redirija a la función recién creada:
+15. Editamos nuestro archivo **urls.py** para crear una url que nos redirija a la función recién creada:
     ```python
     from django.contrib import admin
     from django.urls import path
@@ -173,8 +198,8 @@
         path('probando_template/', probando_template),
     ]
     ```
-12. Ya podemos probar en nuestro navegador ingresando: `http://localhost:8000/probando_template/`
-13. Desde la consola, vamos a detener el servidor presionando: `Ctrl + c`
+16. Ya podemos probar en nuestro navegador ingresando: `http://localhost:8000/probando_template/`
+17. Desde la consola, vamos a detener el servidor presionando: `Ctrl + c`
 ---
 
 ### Subimos los cambios a GitHub

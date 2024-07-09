@@ -74,13 +74,37 @@
     ]
     ```
 4. `python manage.py runserver`, y luego `localhost:8000/saludo/`
-5. Ahora seguiremos los mismos pasos, pero vamos a enviar información desde el front hacia nuestro back mediante el método GET.
+5. Pasaje de parámetros, a continuación vamos a enviar datos procesados con Python a la vista.<br>
+6. En **urls.py** agregamos el path `diaDeHoy/`:
+    ```python
+    from django.contrib import admin
+    from django.urls import path
+    from Clases_Coder.views import saludo, dia_de_hoy
+
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('saludo/', saludo),
+        path('diaDeHoy/', dia_de_hoy),
+    ]
+    ```
+7. En **views.py** agregamos el `método dia_de_hoy()`:
+    ```python
+    from django.http import HttpResponse
+    # Como vamos a usar datetime para obtener el momento, importamos la librería
+    from datetime import datetime
+
+    def dia_de_hoy(request):
+        dia = datetime.now()
+        return HttpResponse(f"Hoy es día:<br>{dia}")
+    ```
+8. Ya podemos consultar la web y ver sus resultados!: **http://127.0.0.1:8000/diaDeHoy/**
+9. Ahora seguiremos los mismos pasos, pero vamos a enviar información desde el front hacia nuestro back mediante el método GET.
     Vamos a agregar la función dentro de **views.py**:
     ```python
     def muestra_nombre(request, nombre):
         return HttpResponse(f"Buenos días {nombre}, bienvenido a Coder")
     ```
-6. En el archivo **urls.py**:
+10. En el archivo **urls.py**:
     ```python
     from django.contrib import admin
     from django.urls import path
@@ -92,10 +116,10 @@
         path('muestra_nombre/<nombre>/', muestra_nombre),
     ]
     ```
-7. Ya podemos probarlo modificando la url del navegador: `localhost:8000//muestra_nombre/Coder`
-8. Usando plantillas:<br>
+11. Ya podemos probarlo modificando la url del navegador: `localhost:8000//muestra_nombre/Coder`
+12. Usando plantillas:<br>
     Vamos a crear en la misma carpeta que venimos trabajando, una nueva carpeta con el nombre que deseen, para el ejemplo se llamará **plantillas**.
-9. Dentro vamos a crear un archivo html, para el ejemplo se llamará **index.html**.
+13. Dentro vamos a crear un archivo html, para el ejemplo se llamará **index.html**.
     ```html
     <!DOCTYPE html>
     <html lang="en">
@@ -110,7 +134,7 @@
     </body>
     </html>
     ```
-10. Generamos una nueva vista:
+14. Generamos una nueva vista:
     ```python
     # Agregamos al encabezado del archivo el import de Template y de Context
     from django.template import Template, Context
@@ -134,7 +158,7 @@
 
         return HttpResponse(documento)
     ```
-11. Editamos nuestro archivo **urls.py**:
+15. Editamos nuestro archivo **urls.py**:
     ```python
     from django.contrib import admin
     from django.urls import path
@@ -147,8 +171,8 @@
         path('probando_template/', probando_template),
     ]
     ```
-12. Ya podemos probar en nuestro navegador ingresando: `http://localhost:8000/probando_template/`
-13. Desde la consola, vamos a detener el servidor presionando: `Ctrl + c`
+16. Ya podemos probar en nuestro navegador ingresando: `http://localhost:8000/probando_template/`
+17. Desde la consola, vamos a detener el servidor presionando: `Ctrl + c`
 ---
 ### Subimos los cambios a GitHub
 1. Subimos los cambios a nuestro repositorio de GitHub:
