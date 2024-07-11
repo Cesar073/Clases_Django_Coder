@@ -88,6 +88,8 @@ def probando_template(request):
 2. 
 ```python
 def usando_loader(request):
+    nombre = "Leandro"
+    apellido = "Romero"
     diccionario = {
         "nombre": nombre,
         "apellido": apellido,
