@@ -72,6 +72,32 @@ def entregables(request):
 ```
 >NOTA: Ya podemos probar su funcionamiento levantando el servidor.
 
+4. Si no tenemos un modelo, podemos copiar el siguiente:
+```python
+from django.db import models
+
+# Create your models here.
+class Curso(models.Model):
+    nombre = models.CharField(max_length=40)
+    camada = models.IntegerField()
+
+class Estudiante(models.Model):
+    nombre = models.CharField(max_length=40)
+    apellido = models.CharField(max_length=20)
+    email = models.EmailField(max_length=40)
+
+class Profesor(models.Model):
+    nombre = models.CharField(max_length=40)
+    apellido = models.CharField(max_length=20)
+    email = models.EmailField(max_length=40)
+    apellido = models.CharField(max_length=30)
+
+class Entregable(models.Model):
+    nombre = models.CharField(max_length=30)
+    fecha_de_entrega = models.DateField()
+    entregado = models.BooleanField()
+```
+
 ---
 #### Agregamos los templates en una APP
 1. Ingresar a la web: [Bootstrap - Templates](https://startbootstrap.com/templates), elegimos una plantilla general, la descargamos y descomprimimos.
