@@ -15,130 +15,174 @@ Interpretamos que el entorno virtual es activado en cada clase.
 ---
 ### Formularios
 ¿Cómo funcionan los formularios?<br>
-El html recibe nuestra información por medio de la vista y su template asociado.  Al apretar un botón  esa información viaja por medio de un método GET o POST y llega al servidor, donde esos datos se manipulan.<br>
+El html recibe nuestra información por medio de la vista y su template asociado. Al apretar un botón  esa información viaja por medio de un método GET o POST y llega al servidor, donde esos datos se manipulan.<br>
 El método GET se utiliza para hacer consultas o búsquedas a nuestro servicio.<br>
 El método POST para los momentos en los que se envía información. Ya sea para crear, modificar o eliminar información almacenada en nuestro proyecto.<br><br>
-Creación de formularios (HTML):
-1. Crear un archivo html que nos sirva de base, del que todos van a heredar, donde ahí colocaremos la navbar, footer y todo lo que se repita en nuestro proyecto.
-2. Luego, vamos a ubicar las partes donde consideramos que cambiarían en cada página y la encerramos entre el juego de llaves y porcentajes: {% %}.<br>
-    Por ejemplo, si queremos que el título de la pestaña cambie en función a la página que se visita, podemos escribir lo siguiente:<br>
-    `{% block title %} Index {% endblock title %}`<br>
-    De ésta forma, cada página que hereda del html base podrá ingresar su propio título o bien, si no colocamos nada en la página que hereda quedará por defecto "Index".<br>
-    Nuestro html de base quedaría así:
-    ```html
-    <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            {% load static %}
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-            <meta name="description" content="" />
-            <meta name="author" content="" />
-            <title>{% block title %} Index {% endblock title %}</title>
-            <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-            <!-- Font Awesome icons (free version)-->
-            <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-            <!-- Core theme CSS (includes Bootstrap)-->
-            <link href="{% static 'AppCoder/css/styles.css' %}" rel="stylesheet" />
-        </head>
-        <body id="page-top">
-            <!-- Navigation-->
-            <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-                <div class="container px-5">
-                    <a class="navbar-brand" href="#page-top">Start Bootstrap</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarResponsive">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item"><a class="nav-link" href="#!">Iniciar sesión</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#!">Crear cuenta</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            {% block main %}
-            {% endblock main %}
-            <!-- Footer-->
-            <footer class="py-5 bg-black">
-                <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; Your Website 2023</p></div>
-            </footer>
-        </body>
-    </html>
 
+**Creación de formularios (HTML)**
+1. Creamos una vista nueva en **views.py**:
+    ```python
+    from django.shortcuts import render
+
+    def curso_formulario(request):
+        return render(request, "AppCoder/curso_formulario.html")
     ```
-4. Por último, creamos todos los html que heredan de ese archivo base:
-    - Indicar que vamos a heredear del otro archivo: `{% extends 'AppCoder/base.html' %}`
-    - También cargamos los estáticos: `{% load static %}`
-    - Y creamos el bloque que queremos incrustar: `{% block title %} Template hecho con Herencia {% endblock title %}`
-    
+2. Agregamos el path en **urls.py**:
+    ```python
+    path('curso-formulario/', views.curso_formulario, name="CursoFormulario")
+    ```
+3. Creamos el archivo HTML donde vamos a agregar el formulario:
     ```html
     {% extends 'AppCoder/base.html' %}
-    
+
     {% load static %}
 
-    {% block title %} Template hecho con Herencia {% endblock title %}
+    {% block title %} Formulario - Agregar Curso {% endblock title %}
 
     {% block main %}
-    <h1>Este es el título del Inicio que cambio</h1>
-    <p>Se ha heredado todo desde la plantilla padre</p>
-    <h3>En el hijo, inicio.html, casí no hay nada :)</h3>
+        <!-- action: representa la url a la que nos va a re-dirigir y enviar la info.
+        Tiene prioridad por sobre la redirección que podamos colocar en views.py -->
+        <form action="/CursoFormulario/" method="POST">
+            {% csrf_token %}
+            <p>Curso: <input type="text" name="curso"></p>
+            <p>Camada: <input type="text" name="camada"></p>
+
+            <input type="submit" value="Enviar">
+
+        </form>
+    {% endblock main %}
+    ```
+4. Editamos la vista (**views.py**) para trabajar con los datos recibidos en el POST:
+    ```python
+    from django.shortcuts import render
+
+    def curso_formulario(request):
+
+        if request.method == 'POST':
+
+            curso = Curso(nombre=request.POST['curso'],camada=request.POST['camada'])
+            curso.save()
+
+            return render(request, "AppCoder/index.html")
+
+        return render(request,"AppCoder/curso_formulario.html")
+    ```
+
+---
+### Creación de formularios (API from Django)
+Django nos provee una API para crear formularios de una manera más simple, dominar esta API nos facilitará la creación de los mismos incluyendo validación de campos entre otros beneficios.
+1. En la app Clases_Coder creamos un nuevo archivo **forms.py**.<br>
+    Similar a la creación de modelos para la base de datos, vamos a crear cada campo de nuestro form pero heredando de `from django import forms`:
+    ```python
+    from django import forms
+
+    class CursoFormulario(forms.Form):
+        curso = forms.CharField()
+        camada = forms.IntegerField()
+    ```
+2. Adecuamos la vista (**views.py**) para recibir generar y recibir el formulario recién creado:
+    ```python
+    def form_con_api(request):
+        if request.method == "POST":
+            mi_formulario = CursoFormulario(request.POST) # Aqui me llega la informacion del html
+            # print(miFormulario)
+            if mi_formulario.is_valid():
+                informacion = mi_formulario.cleaned_data
+                
+                curso = Curso(nombre=informacion["curso"], camada=informacion["camada"])
+                curso.save()
+
+                return render(request, "AppCoder/index.html")
+        else:
+            mi_formulario = CursoFormulario()
+
+        return render(request, "AppCoder/form_con_api.html", {"mi_formulario": mi_formulario})
+    ```
+3. Creamos un html (**form_con_api.html**) preparado para recibir el formulario de Django:
+    ```html
+    {% extends 'AppCoder/base.html' %}
+
+    {% load static %}
+
+    {% block title %} Formulario con API {% endblock title %}
+
+    {% block main %}
+        <!-- En este ejemplo dejamos el action vacío ya que lo manejamos desde la vista -->
+        <form action="" method="POST">
+            {% csrf_token %}
+            
+            <table>
+                {{ mi_formulario.as_table }}
+            </table>
+            <input type="submit" value="Enviar">
+
+        </form>
     {% endblock main %}
     ```
 
 ---
-### Navegando entre templates
-Para navegar en nuestro sitio, debemos utilizar una sintaxis diferente dentro de nuestros html.
-1. Vamos a indicar en nuestro **urls.py** un nombre para cada url:
+### Búsqueda con Form
+Vamos a utilizar el mismo tipo de formulario pero en este caso serán para realizar búsquedas. En las placas hay una versión para el uso de formularios creados con HTML, pero vamos a usar la API de Django ya que es lo que se va a solicitar para la pre-entrega.<br>
+1. Agregar path en el archivo **urls.py** para la vista donde realizamos la búsqueda:
     ```python
-    urlpatterns = [
-        path('/', views.inicio, name="Inicio"),
-        path('profesores/', views.profesores, name="Profesores"),
-        path('estudiantes/', views.estudiantes, name="Estudiantes"),
-        path('cursos/', views.cursos, name="Cursos"),
-        path('entregables/', views.entregables, name="Entregables")
-    ]
+    path('buscar-form-con-api/', views.buscar_form_con_api, name="Buscar_Form_Con_Api"),
     ```
-2. En los llamados a nuestros links en el html, debemos indicarlos con nueva sintaxis pero haciendo referencia a los nombres recién creados:
+2. Creamos la función en **views.py** para llamar al template con su formulario:
+    ```python
+    def buscar_form_con_api(request):
+        if request.method == "POST":
+            miFormulario = BuscaCursoForm(request.POST) # Aqui me llega la informacion del html
+
+            if miFormulario.is_valid():
+                informacion = miFormulario.cleaned_data
+                
+                cursos = Curso.objects.filter(nombre__icontains=informacion["curso"])
+
+                return render(request, "AppCoder/resultados_buscar_form.html", {"cursos": cursos})
+        else:
+            miFormulario = BuscaCursoForm()
+
+        return render(request, "AppCoder/buscar_form_con_api.html", {"miFormulario": miFormulario})
+    ```
+
+3. Creamos el template (**buscar_form_con_api.html**) con un form:
     ```html
-    <nav class="navbar navbar-light bg-light static-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
-            <a class="navbar-brand" href="{% url 'Profesores' %}">Profesores</a>
-            <a class="navbar-brand" href="{% url 'Estudiantes' %}">Estudiantes</a>
-            <a class="navbar-brand" href="{% url 'Cursos' %}">Cursos</a>
-            <a class="navbar-brand" href="{% url 'Entregables' %}">Entregables</a>
-            <a class="btn btn-primary" href="#NADAAUN">INICIAR</a>
-        </div>
-    </nav>
+    {% extends 'AppCoder/base.html' %}
+
+    {% load static %}
+
+    {% block title %} Buscar Curso {% endblock title %}
+
+    {% block main %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            <table>
+                {{ miFormulario.as_table }}
+            </table>
+            <input type="submit" value="Enviar">
+
+        </form>
+    {% endblock main %}
     ```
-3. En caso de que aún estemos usando el método render en las vistas, le cambiamos a todas el `HttpResponse` por:
-    ```python
-    from django.shortcuts import render
+4. Creamos el template **mostrar_cursos.html** que hacemos referencia en la vista (**views.py**) cuando tenemos resultados para mostrar:
+    ```html
+    {% extends 'AppCoder/base.html' %}
 
-    def inicio(request):
-        return render(request, "AppCoder/index.html")
-    ```
----
-### Panel Admin de Django
-El panel de administración de Django es una herramienta versátil y muy útil a la hora de administrar una aplicación. Desde una interfaz gráfica podemos realizar acciones del tipo CRUD en cada una de nuestras tablas y administrar usuarios.<br>
-Para poder utilizar nuestro Panel de Django con nuestros modelos debemos seguir los siguientes pasos:
-1. Ir a cada archivo **admin.py** de cada aplicación y agregamos cada modelo de la siguiente manera:
-    ```python
-    from django.contrib import admin
-    from .models import Profesor, Estudiante, Curso, Entregable
+    {% load static %}
 
-    admin.site.register(Profesor)
-    admin.site.register(Estudiante)
-    admin.site.register(Curso)
-    admin.site.register(Entregable)
+    {% block title %} Inicio {% endblock title %}
+
+    {% block main %}
+
+
+    {% for curso in cursos %}
+        <li>Curso: {{ curso.nombre }} | Camada: {{ curso.camada }}</li>
+    {% endfor %}
+
+
+    {% endblock main %}
 
     ```
-2. Como no existe aún un usuario en nuestro proyecto, vamos a crear un superuser desde la consola de Django:
-    - `python manage.py createsuperuser`
-    - Cargamos un user (cesar)
-    - Cargamos un mail (a@b.com)
-    - Cargamos el password y lo repetimos (pass123)
-
-3. Ya podemos ingresar a nuestro panel de Admin (url: `localhost:8000/admin/`) y luego de ingresar las credenciales recién creadas, podremos trabajar con nuestros modelos.
 
 ---
 ### Subimos los cambios a GitHub
