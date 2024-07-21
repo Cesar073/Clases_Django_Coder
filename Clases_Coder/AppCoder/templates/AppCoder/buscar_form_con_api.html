@@ -2,11 +2,9 @@
 
 {% load static %}
 
-{% block title %} Inicio {% endblock title %}
+{% block title %} Buscar Curso {% endblock title %}
 
 {% block main %}
-    <!-- action: representa la url a la que nos va a re-dirigir. Tiene prioridad
-    por sobre la redirección que podamos colocar en views.py -->
     <form action="" method="POST">
         {% csrf_token %}
         <table>

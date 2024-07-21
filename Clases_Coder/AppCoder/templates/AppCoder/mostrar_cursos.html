@@ -8,10 +8,8 @@
 
 
 {% for curso in cursos %}
-    <li>{{ curso }}</li><a href="{% url 'Delete' curso.id %}">Borrar</a>
+<li>Curso: {{ curso.nombre }} | Camada: {{ curso.camada }}</li>
 {% endfor %}
 
 
 {% endblock main %}
-
-

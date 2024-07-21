@@ -26,9 +26,9 @@ urlpatterns = [
 ]
 
 clase_21 = [
-    path('form-comun/', views.form_comun, name="Form-Comun"),
+    path('form-comun/', views.curso_formulario, name="Form-Comun"),
     path('form-con-api/', views.form_con_api, name="Form-Con-Api"),
-    path('buscar-form-con-api/', views.buscar_form_con_api, name="Buscar-Form-Con-Api"),
+    path('buscar-form-con-api/', views.buscar_form_con_api, name="Buscar_Form_Con_Api"),
     path('mostrar-cursos/', views.mostrar_cursos, name="Mostrar_Cursos"),
 ]
 
