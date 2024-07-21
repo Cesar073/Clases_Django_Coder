@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.urls import path
 from AppCoder import views
-from AppCoder import class_views
 
 urlpatterns = [
     path('', views.inicio, name="Inicio"),
@@ -24,19 +23,13 @@ urlpatterns = [
     path('estudiantes/', views.estudiantes, name="Estudiantes"),
     path('cursos/', views.cursos, name="Cursos"),
     path('entregables/', views.entregables, name="Entregables"),
+]
+
+clase_21 = [
     path('form-comun/', views.form_comun, name="Form-Comun"),
     path('form-con-api/', views.form_con_api, name="Form-Con-Api"),
     path('buscar-form-con-api/', views.buscar_form_con_api, name="Buscar-Form-Con-Api"),
     path('mostrar-cursos/', views.mostrar_cursos, name="Mostrar_Cursos"),
-    path('confirmar-borrado-cursos/<id>/', views.clase_22_cursos)
 ]
 
-# URL's basadas en clases
-urlpatterns += [
-    path('class-list/', class_views.CursoListView.as_view(), name="List"),
-    path('class-detail/<pk>/', class_views.CursoDetailView.as_view(), name="Detail"),
-    path('class-create/', class_views.CursoCreateView.as_view(), name="Create"),
-    path('class-update/<pk>/', class_views.CursoUpdateView.as_view(), name="Update"),
-    path('class-delete/<pk>/', class_views.CursoDeleteView.as_view(), name="Delete"),
-]
-# objects.get(pk=pk)
+urlpatterns += clase_21

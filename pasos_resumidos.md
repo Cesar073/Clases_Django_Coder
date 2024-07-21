@@ -1,6 +1,6 @@
 # CLASES DE DJANGO EN CODERHOUSE
 
-## CLASE 4: Clase 20 - Playground intermedio Parte II
+## CLASE 4: Clase 21 - Playground intermedio Parte III
 ---
 ### Entorno virtual
 Interpretamos que el entorno virtual es activado en cada clase.
@@ -9,7 +9,7 @@ Interpretamos que el entorno virtual es activado en cada clase.
 ### Git
 1. `git checkout main`
 2. `git pull`
-3. `git checkout -b clase_20-Playground_intermedio_Parte_II`
+3. `git checkout -b clase_21-Playground_intermedio_Parte_III`
 
 ---
 ### Herencia de Templates

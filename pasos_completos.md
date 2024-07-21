@@ -1,6 +1,6 @@
 # CLASES DE DJANGO EN CODERHOUSE
 
-## CLASE 4: Clase 20 - Playground intermedio Parte II
+## CLASE 4: Clase 21 - Playground intermedio Parte III
 ---
 ### Entorno virtual
 Interpretamos que el entorno virtual es activado en cada clase.
@@ -10,11 +10,15 @@ Interpretamos que el entorno virtual es activado en cada clase.
 1. Nos vamos a mover a la rama main, actualizarla y crear una nueva rama para la nueva clase:
     `git checkout main`
 2. Actualizamos con: `git pull`. Esto se descarga los cambios que hayan en la rama main. Recordemos que el PR realizado en la clase anterior agregó archivos y modificaciones en la rama main.
-3. Creamos y nos movemos a la nueva rama: `git checkout -b clase_20-Playground_intermedio_Parte_II`
+3. Creamos y nos movemos a la nueva rama: `git checkout -b clase_21-Playground_intermedio_Parte_III`
 
 ---
-### Herencia de Templates
-Al crear muchos archivos html podemos darnos cuenta que hay código que se repiten en todos los archivos como la navbar o el footer. Podemos aplicar **Herencia de templates** para evitar escribirlo más de una vez y centralizar el código, facilitando posibles futuros cambios:
+### Formularios
+¿Cómo funcionan los formularios?<br>
+El html recibe nuestra información por medio de la vista y su template asociado.  Al apretar un botón  esa información viaja por medio de un método GET o POST y llega al servidor, donde esos datos se manipulan.<br>
+El método GET se utiliza para hacer consultas o búsquedas a nuestro servicio.<br>
+El método POST para los momentos en los que se envía información. Ya sea para crear, modificar o eliminar información almacenada en nuestro proyecto.<br><br>
+Creación de formularios (HTML):
 1. Crear un archivo html que nos sirva de base, del que todos van a heredar, donde ahí colocaremos la navbar, footer y todo lo que se repita en nuestro proyecto.
 2. Luego, vamos a ubicar las partes donde consideramos que cambiarían en cada página y la encerramos entre el juego de llaves y porcentajes: {% %}.<br>
     Por ejemplo, si queremos que el título de la pestaña cambie en función a la página que se visita, podemos escribir lo siguiente:<br>

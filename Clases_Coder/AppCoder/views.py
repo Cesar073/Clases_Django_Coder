@@ -17,6 +17,8 @@ def estudiantes(request):
 def entregables(request):
     return render(request, "AppCoder/entregables.html")
 
+
+# Clase 21
 def form_comun(request):
 
     if request.method == 'POST':
@@ -65,16 +67,3 @@ def mostrar_cursos(request):
     contexto= {"cursos":cursos} 
 
     return render(request, "AppCoder/mostrar_cursos.html",contexto)
-
-def clase_22_cursos(request, id):
-
-    profesor = Curso.objects.get(id=id)
-    profesor.delete()
- 
-    # vuelvo al menú
-    cursos = Curso.objects.all()  # trae todos los profesores
- 
-    contexto = {"cursos": cursos}
- 
-    return render(request, "AppCoder/mostrar_cursos.html", contexto)
-
