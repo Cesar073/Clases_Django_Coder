@@ -20,41 +20,9 @@ El método GET se utiliza para hacer consultas o búsquedas a nuestro servicio.<
 El método POST para los momentos en los que se envía información. Ya sea para crear, modificar o eliminar información almacenada en nuestro proyecto.<br><br>
 
 **Creación de formularios (HTML)**
-1. Creamos una vista nueva en **views.py**:
+1. Creamos una vista nueva en **views.py** para trabajar con los datos recibidos en el POST:
     ```python
-    from django.shortcuts import render
-
-    def curso_formulario(request):
-        return render(request, "AppCoder/curso_formulario.html")
-    ```
-2. Agregamos el path en **urls.py**:
-    ```python
-    path('curso-formulario/', views.curso_formulario, name="CursoFormulario")
-    ```
-3. Creamos el archivo HTML donde vamos a agregar el formulario:
-    ```html
-    {% extends 'AppCoder/base.html' %}
-
-    {% load static %}
-
-    {% block title %} Formulario - Agregar Curso {% endblock title %}
-
-    {% block main %}
-        <!-- action: representa la url a la que nos va a re-dirigir y enviar la info.
-        Tiene prioridad por sobre la redirección que podamos colocar en views.py -->
-        <form action="/CursoFormulario/" method="POST">
-            {% csrf_token %}
-            <p>Curso: <input type="text" name="curso"></p>
-            <p>Camada: <input type="text" name="camada"></p>
-
-            <input type="submit" value="Enviar">
-
-        </form>
-    {% endblock main %}
-    ```
-4. Editamos la vista (**views.py**) para trabajar con los datos recibidos en el POST:
-    ```python
-    from django.shortcuts import render
+    from AppCoder.models import Curso
 
     def curso_formulario(request):
 
@@ -67,11 +35,51 @@ El método POST para los momentos en los que se envía información. Ya sea para
 
         return render(request,"AppCoder/curso_formulario.html")
     ```
+2. Agregamos el path en **urls.py**:
+    ```python
+    path('curso-formulario/', views.curso_formulario, name="CursoFormulario")
+    ```
+3. Creamos el archivo HTML (**curso_formulario.html**) donde vamos a agregar el formulario:
+    ```html
+    {% extends 'AppCoder/base.html' %}
+
+    {% load static %}
+
+    {% block title %} Formulario - Agregar Curso {% endblock title %}
+
+    {% block main %}
+        <!-- action: representa la url a la que nos va a re-dirigir y enviar la info.
+        Tiene prioridad por sobre la redirección que podamos colocar en views.py -->
+        <form action="/curso-formulario/" method="POST">
+            {% csrf_token %}
+            <p>Curso: <input type="text" name="curso"></p>
+            <p>Camada: <input type="text" name="camada"></p>
+
+            <input type="submit" value="Enviar">
+
+        </form>
+    {% endblock main %}
+    ```
 
 ---
 ### Creación de formularios (API from Django)
 Django nos provee una API para crear formularios de una manera más simple, dominar esta API nos facilitará la creación de los mismos incluyendo validación de campos entre otros beneficios.
-1. En la app Clases_Coder creamos un nuevo archivo **forms.py**.<br>
+1. Agregamos un path en **urls.py** para apuntar a la vista del nuevo form:
+    ```python
+    from django.urls import path
+    from AppCoder import views
+
+    urlpatterns = [
+        path('', views.inicio, name="Inicio"),
+        path('profesores/', views.profesores, name="Profesores"),
+        path('estudiantes/', views.estudiantes, name="Estudiantes"),
+        path('cursos/', views.cursos, name="Cursos"),
+        path('entregables/', views.entregables, name="Entregables"),
+        path('curso-formulario/', views.curso_formulario, name="CursoFormulario"),
+        path('form-con-api/', views.form_con_api, name="FormConApi")
+    ]
+    ```
+2. En la app Clases_Coder creamos un nuevo archivo **forms.py**.<br>
     Similar a la creación de modelos para la base de datos, vamos a crear cada campo de nuestro form pero heredando de `from django import forms`:
     ```python
     from django import forms
@@ -80,8 +88,10 @@ Django nos provee una API para crear formularios de una manera más simple, domi
         curso = forms.CharField()
         camada = forms.IntegerField()
     ```
-2. Adecuamos la vista (**views.py**) para recibir generar y recibir el formulario recién creado:
+3. Adecuamos la vista (**views.py**) para recibir generar y recibir el formulario recién creado:
     ```python
+    from AppCoder.forms import CursoFormulario
+
     def form_con_api(request):
         if request.method == "POST":
             mi_formulario = CursoFormulario(request.POST) # Aqui me llega la informacion del html
@@ -98,7 +108,7 @@ Django nos provee una API para crear formularios de una manera más simple, domi
 
         return render(request, "AppCoder/form_con_api.html", {"mi_formulario": mi_formulario})
     ```
-3. Creamos un html (**form_con_api.html**) preparado para recibir el formulario de Django:
+4. Creamos un html (**form_con_api.html**) preparado para recibir el formulario de Django:
     ```html
     {% extends 'AppCoder/base.html' %}
 
@@ -129,20 +139,22 @@ Vamos a utilizar el mismo tipo de formulario pero en este caso serán para reali
     ```
 2. Creamos la función en **views.py** para llamar al template con su formulario:
     ```python
+    from AppCoder.forms import BuscaCursoForm
+
     def buscar_form_con_api(request):
         if request.method == "POST":
-            miFormulario = BuscaCursoForm(request.POST) # Aqui me llega la informacion del html
+            mi_formulario = BuscaCursoForm(request.POST) # Aqui me llega la informacion del html
 
-            if miFormulario.is_valid():
-                informacion = miFormulario.cleaned_data
+            if mi_formulario.is_valid():
+                informacion = mi_formulario.cleaned_data
                 
                 cursos = Curso.objects.filter(nombre__icontains=informacion["curso"])
 
-                return render(request, "AppCoder/resultados_buscar_form.html", {"cursos": cursos})
+                return render(request, "AppCoder/mostrar_cursos.html", {"cursos": cursos})
         else:
-            miFormulario = BuscaCursoForm()
+            mi_formulario = BuscaCursoForm()
 
-        return render(request, "AppCoder/buscar_form_con_api.html", {"miFormulario": miFormulario})
+        return render(request, "AppCoder/buscar_form_con_api.html", {"mi_formulario": mi_formulario})
     ```
 
 3. Creamos el template (**buscar_form_con_api.html**) con un form:
@@ -157,7 +169,7 @@ Vamos a utilizar el mismo tipo de formulario pero en este caso serán para reali
         <form action="" method="POST">
             {% csrf_token %}
             <table>
-                {{ miFormulario.as_table }}
+                {{ mi_formulario.as_table }}
             </table>
             <input type="submit" value="Enviar">
 
@@ -183,11 +195,16 @@ Vamos a utilizar el mismo tipo de formulario pero en este caso serán para reali
     {% endblock main %}
 
     ```
+5. Por último agregamos el formulario nuevo en **forms.py**:
+    ```python
+    class BuscaCursoForm(forms.Form):
+        curso = forms.CharField()
+    ```
 
 ---
 ### Subimos los cambios a GitHub
 1. Subimos los cambios a nuestro repositorio de GitHub:
     * `git add .`
-    * `git commit -m "Agregamos Herencia e iniciamos el Admin de Django"`
-    * `git push --set-upstream origin clase_20-Playground_intermedio_Parte_II`
+    * `git commit -m "Agregamos formularios para guardar y buscar cursos"`
+    * `git push --set-upstream origin clase_21-Playground_intermedio_Parte_III`
 2. En Github realizamos un PR y hacemos el merge a **main**.
