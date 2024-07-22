@@ -9,8 +9,7 @@
     por sobre la redirección que podamos colocar en views.py -->
     <ul>
         {% for curso in cursos %}
-        <li> {{ curso.nombre }} </li>
-        <li> {{ curso.camada }} </li>
+        <li> {{ curso.nombre }} | {{ curso.camada }} </li>
         {% endfor %}
     </ul>
 {% endblock main %}
