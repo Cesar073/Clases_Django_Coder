@@ -27,16 +27,16 @@ A continuación vamos a crear un formulario para editar los datos de un usuario.
     {% block title %} Login {% endblock title %}
 
     {% block main %}
-        <form action="" method="POST" enctype="multipart/form-data">
+        
+        <h1>Editar perfil de {{usuario}}</h1>
+
+        <form action="" method="POST">
             {% csrf_token %}
 
             <table>
-
                 {{ mi_form.as_table }}
-                <input type="submit" value="Actualizar">
-
             </table>
-
+            <input type="submit" value="Actualizar">
 
         </form>
 
@@ -57,29 +57,17 @@ A continuación vamos a crear un formulario para editar los datos de un usuario.
 
         if request.method == 'POST':
 
-            miFormulario = UserEditForm(request.POST)
+            miFormulario = UserEditForm(request.POST, instance=request.user)
 
             if miFormulario.is_valid():
 
-                informacion = miFormulario.cleaned_data
-
-                # Datos que se modificarán
-                usuario.email = informacion['email']
-                usuario.password1 = informacion['password1']
-                usuario.password2 = informacion['password1']
-                usuario.save()
+                miFormulario.save()
 
                 # Retornamos al inicio una vez guardado los datos
                 return render(request, "AppCoder/index.html")
 
         else:
-            # Cuando el método es GET, podemos mostrar el formulario
-            # con datos pre-cargados porque los conocemos del mismo usuario
-            datos = {
-                'first_name': usuario.first_name,
-                'email': usuario.email
-            }
-            miFormulario = UserEditForm(initial=datos)
+            miFormulario = UserEditForm(instance=request.user)
 
         return render(
             request,
@@ -94,23 +82,26 @@ A continuación vamos a crear un formulario para editar los datos de un usuario.
 3. **urls.py**<br>
     Agregamos el siguiente path a la lista de **urlpatterns**
     ```python
-    path('editar_usuario/', views.editar_usuario, name='EditarUsuario')
+    path('editar_perfil/', views.editar_perfil, name='EditarPerfil')
     ```
 
 4. **forms.py**<br>
-    A. Creamos el formulario heredando el mismo formulario de Django que usamos para crear un usuario nuevo.
+    A. Creamos el formulario heredando de UserChangeForm, se lo agregamos al UserCreationForm que importamos la clase pasada.
     ```python
-    class UserEditForm(UserCreationForm):
+    from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-        # Obligatorios
+
+    class UserEditForm(UserChangeForm):
+
+        password = None
         email = forms.EmailField(label="Ingrese su email:")
-        password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
-        password2 = forms.CharField(label='Repetir la contraseña', widget=forms.PasswordInput)
+        last_name = forms.CharField(label='Apellido')
+        first_name = forms.CharField(label='Nombre')
 
         class Meta:
             model = User
-            fields = ['email', 'password1', 'password2']
-            help_texts = {k:"" for k in fields}
+            fields = ['email', 'last_name', 'first_name']
+            # help_texts = {k:"" for k in fields}
     ```
 
     B. Agregamos en el formulario más datos de la tabla User
@@ -135,6 +126,41 @@ A continuación vamos a crear un formulario para editar los datos de un usuario.
                 'first_name'
             ]
             help_texts = {k:"" for k in fields}
+    ```
+
+5. Creamos Form y vista para cambiar la contraseña por separado.<br>
+    **views.py**
+    ```python
+    class PasswordChange(LoginRequiredMixin, PasswordChangeView):
+
+        template_name = "AppCoder/cambiar_contrasenia.html"
+        success_url = reverse_lazy('EditarPerfil')
+    ```
+
+6. **editar_contrasenia.html**<br>
+    El template recibirá desde la vista el formulario.
+    ```html
+    {% extends 'AppCoder/base.html' %}
+
+    {% load static %}
+
+    {% block title %} Cambiar Contraseña {% endblock title %}
+
+    {% block main %}
+        
+        <h1>Cambiar Contraseña</h1>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            <table>
+                {{ mi_form.as_table }}
+            </table>
+            <input type="submit" value="Actualizar">
+
+        </form>
+
+    {% endblock main %}
     ```
 
 ---
