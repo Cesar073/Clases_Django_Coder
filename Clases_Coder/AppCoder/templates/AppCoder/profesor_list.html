@@ -12,7 +12,7 @@
         <div class="card" style="width: 18rem;" >
             <img src="..." class="card-img-top" alt="...">
             <div class="card-body">
-            <p class="card-title">CAMADA: {{ profesor.apellido }}, {{ profesor.nombre }}</p>
+            <p class="card-title">NOMBRE: {{ profesor.apellido }}, {{ profesor.nombre }}</p>
             <p class="card-text">EMAIL: {{ profesor.email }}</p>
             <a href="{% url 'ProfesorDetail' profesor.id %}" class="btn btn-primary">Ver</a>
             <a href="{% url 'ProfesorUpdate' profesor.id %}" class="btn btn-primary">Editar</a>

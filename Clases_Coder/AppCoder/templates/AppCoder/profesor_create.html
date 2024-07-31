@@ -10,9 +10,9 @@
 
 <form method="POST">
     {% csrf_token %}
-    <div>{{ form.nombre }}</div>
-    <div>{{ form.camada }}</div>
-    
+    <table>
+        {{form.as_table}}
+    </table>
     <input type="submit" value="Enviar">
 
 </form>
