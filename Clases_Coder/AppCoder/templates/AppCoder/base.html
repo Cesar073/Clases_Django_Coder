@@ -37,15 +37,13 @@
                         
                         {# DROPDOWN PARA LA CUENTA DE USUARIO #}
                         {% if request.user.is_authenticated %}
-                            {% if user_avatar %}
-                                <img src="{{user_avatar}}" alt="" style="height: 40px;width: 40px;">
-                            {% endif %}
+                            <img src="{{request.user.imagen.imagen.url}}" alt="" style="height: 50px;width: 50px;">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     {{ request.user.username }}
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="{% url 'Edit' %}">Editar cuenta</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'EditarPerfil' %}">Editar cuenta</a></li>
                                     <li><a class="dropdown-item" href="{% url 'Logout' %}">Cerrar sesión</a></li>
                                 </ul>
                             </div>

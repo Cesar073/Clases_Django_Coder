@@ -5,6 +5,9 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from users.forms import UserEditForm, UserRegisterForm
 from users.models import Imagen
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 #c0d3r_h0u53
 
@@ -63,42 +66,48 @@ def editar_perfil(request):
         miFormulario = UserEditForm(request.POST, request.FILES)
 
         if miFormulario.is_valid():
+            miFormulario.save()
+            if False:
+                informacion = miFormulario.cleaned_data
 
-            informacion = miFormulario.cleaned_data
+                if informacion["password1"] != informacion["password2"]:
+                    datos = {
+                        'first_name': usuario.first_name,
+                        'email': usuario.email
+                    }
+                    miFormulario = UserEditForm(initial=datos)
 
-            if informacion["password1"] != informacion["password2"]:
-                datos = {
-                    'first_name': usuario.first_name,
-                    'email': usuario.email
-                }
-                miFormulario = UserEditForm(initial=datos)
-
-            else:
-                usuario.email = informacion['email']
-                if informacion["password1"]:
-                    usuario.set_password(informacion["password1"])
-                usuario.last_name = informacion['last_name']
-                usuario.first_name = informacion['first_name']
-                usuario.save()
-
-                # Creamos nueva imagen en la tabla
-                try:
-                    avatar = Imagen.objects.get(user=usuario)
-                except Imagen.DoesNotExist:
-                    avatar = Imagen(user=usuario, imagen=informacion["imagen"])
-                    avatar.save()
                 else:
-                    avatar.imagen = informacion["imagen"]
-                    avatar.save()
+                    usuario.email = informacion['email']
+                    if informacion["password1"]:
+                        usuario.set_password(informacion["password1"])
+                    usuario.last_name = informacion['last_name']
+                    usuario.first_name = informacion['first_name']
+                    usuario.save()
 
-                return render(request, "AppCoder/index.html")
+                    # Creamos nueva imagen en la tabla
+                    try:
+                        avatar = Imagen.objects.get(user=usuario)
+                    except Imagen.DoesNotExist:
+                        avatar = Imagen(user=usuario, imagen=informacion["imagen"])
+                        avatar.save()
+                    else:
+                        avatar.imagen = informacion["imagen"]
+                        avatar.save()
+
+            return render(request, "AppCoder/index.html")
 
     else:
-        datos = {
-            'first_name': usuario.first_name,
-            'email': usuario.email
-        }
-        miFormulario = UserEditForm(initial=datos)
+        if False:
+            datos = {
+                'first_name': usuario.first_name,
+                'email': usuario.email
+            }
+            miFormulario = UserEditForm(initial=datos)
+        miFormulario = UserEditForm(instance=request.user)
 
     return render(request, "users/editar_usuario.html", {"mi_form": miFormulario, "usuario": usuario})
 
+class CambiarContrasenia(LoginRequiredMixin, PasswordChangeView):
+    template_name = "users/editar_pass.html"
+    success_url = reverse_lazy("EditarPerfil")

@@ -1,0 +1,19 @@
+{% extends 'AppCoder/base.html' %}
+
+{% load static %}
+
+{% block title %} Editar PASS {% endblock title %}
+
+{% block main %}
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <table>
+            {{ form.as_table }}
+        </table>
+
+        <input type="submit" value="Cambiar pass">
+
+    </form>
+
+{% endblock main %}
