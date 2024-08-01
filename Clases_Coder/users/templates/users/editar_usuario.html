@@ -5,7 +5,7 @@
 {% block title %} Login {% endblock title %}
 
 {% block main %}
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
         <table>

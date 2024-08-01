@@ -14,9 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Dejamos la vista INICIO basada en funciones y visible para todos
 def inicio(request):
-    # imagen = Imagen.objects.filter(user=request.user.id)[0]
-    # print(imagen)
-    return render(request, "AppCoder/index.html")# , {"url": imagen})
+    return render(request, "AppCoder/index.html")
 
 
 # Dejamos una vista basada en funciones que requiere login para mostrar el uso de @login_required

@@ -55,56 +55,24 @@ def register(request):
 # Obligamos a loguearse para editar los datos del usuario
 @login_required
 def editar_perfil(request):
-
     # El usuario para poder editar su perfil primero debe estar logueado.
     # Al estar logueado, podremos encontrar dentro del request la instancia
     # del usuario -> request.user
     usuario = request.user
 
     if request.method == 'POST':
-
-        miFormulario = UserEditForm(request.POST, request.FILES, instance=request.user)
-
+        miFormulario = UserEditForm(request.POST, request.FILES, instance=usuario)
         if miFormulario.is_valid():
+            print(miFormulario.cleaned_data)
+            if miFormulario.cleaned_data.get('imagen'):
+                usuario.imagen.imagen = miFormulario.cleaned_data.get('imagen')
+                usuario.imagen.save()
             miFormulario.save()
-            if False:
-                informacion = miFormulario.cleaned_data
-
-                if informacion["password1"] != informacion["password2"]:
-                    datos = {
-                        'first_name': usuario.first_name,
-                        'email': usuario.email
-                    }
-                    miFormulario = UserEditForm(initial=datos)
-
-                else:
-                    usuario.email = informacion['email']
-                    if informacion["password1"]:
-                        usuario.set_password(informacion["password1"])
-                    usuario.last_name = informacion['last_name']
-                    usuario.first_name = informacion['first_name']
-                    usuario.save()
-
-                    # Creamos nueva imagen en la tabla
-                    try:
-                        avatar = Imagen.objects.get(user=usuario)
-                    except Imagen.DoesNotExist:
-                        avatar = Imagen(user=usuario, imagen=informacion["imagen"])
-                        avatar.save()
-                    else:
-                        avatar.imagen = informacion["imagen"]
-                        avatar.save()
 
             return render(request, "AppCoder/index.html")
 
     else:
-        if False:
-            datos = {
-                'first_name': usuario.first_name,
-                'email': usuario.email
-            }
-            miFormulario = UserEditForm(initial=datos)
-        miFormulario = UserEditForm(instance=request.user)
+        miFormulario = UserEditForm(instance=usuario)
 
     return render(request, "users/editar_usuario.html", {"mi_form": miFormulario, "usuario": usuario})
 
