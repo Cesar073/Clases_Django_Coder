@@ -3,20 +3,15 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
 class UserEditForm(UserChangeForm):
-
-    # Obligatorios
     password = None
-    email = forms.EmailField(label="Ingrese su email:")
-    # password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput, required=False)
-    # password2 = forms.CharField(label='Repetir la contraseña', widget=forms.PasswordInput, required=False)
-
-    last_name = forms.CharField(required=False)
-    first_name = forms.CharField(required=False)
-    # imagen = forms.ImageField(required=False)
+    email = forms.EmailField(label="Ingrese su email")
+    last_name = forms.CharField(label="Apellido", required=False)
+    first_name = forms.CharField(label="Nombre", required=False)
+    imagen = forms.ImageField(required=False)
 
     class Meta:
         model = User
-        fields = ['email', 'last_name', 'first_name']
+        fields = ['email', 'last_name', 'first_name', 'imagen']
 
 
 class UserRegisterForm(UserCreationForm):

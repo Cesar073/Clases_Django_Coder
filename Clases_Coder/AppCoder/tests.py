@@ -18,7 +18,7 @@ class EliminarProfesorTest(TestCase):
 
     def test_eliminar_profesor(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertTemplateUsed(response, "AppCoder/profesor_confirm_delete.html")
         self.client.post(self.url)
         self.assertQuerysetEqual(Profesor.objects.all(), [])

@@ -8,5 +8,4 @@ class Imagen(models.Model):
     imagen = models.ImageField(upload_to='imagenes', null=True, blank = True)
 
     def __str__(self):
-        return f"{self.imagen}"
-        #return f"{self.user} - {self.imagen}"
+        return f"{self.user} - {self.imagen}"
