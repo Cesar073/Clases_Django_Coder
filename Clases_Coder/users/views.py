@@ -63,10 +63,13 @@ def editar_perfil(request):
     if request.method == 'POST':
         miFormulario = UserEditForm(request.POST, request.FILES, instance=usuario)
         if miFormulario.is_valid():
-            print(miFormulario.cleaned_data)
             if miFormulario.cleaned_data.get('imagen'):
-                usuario.imagen.imagen = miFormulario.cleaned_data.get('imagen')
-                usuario.imagen.save()
+                if Imagen.objects.filter(user=usuario).exists():
+                    usuario.imagen.imagen = miFormulario.cleaned_data.get('imagen')
+                    usuario.imagen.save()
+                else:
+                    avatar = Imagen(user=usuario, imagen=miFormulario.cleaned_data.get('imagen'))
+                    avatar.save()
             miFormulario.save()
 
             return render(request, "AppCoder/index.html")
